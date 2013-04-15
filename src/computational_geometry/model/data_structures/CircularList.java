@@ -360,10 +360,17 @@ public class CircularList<T extends Comparable<T>> implements List<T>,
     }
 
     @Override
-    public List<T> subList(int arg0, int arg1) {
-        System.err.println("subList() not implemented");
-        // TODO Auto-generated method stub
-        return null;
+    public List<T> subList(int fromIndex, int toIndex) {
+        if (fromIndex < 0 || toIndex > size() || fromIndex > toIndex) {
+            throw new IndexOutOfBoundsException("fromIndex=" + fromIndex + ", toIndex=" + toIndex + ", size=" + size());
+        }
+        CircularList<T> newList = new CircularList<T>();
+        LinkNode<T> node = getNode(toIndex-1);
+        for (int i = 0; i < (toIndex - fromIndex); ++i) {
+            newList.addFirst(node.getValue());
+            node = node.getPrev();
+        }
+        return newList;
     }
 
 }
