@@ -48,8 +48,7 @@ public class Voronoi {
         } else if (points.size() == 3) {
             vor = handle3PointsVor(points);
         } else {
-            vor = new VoronoiDiagram();
-            // TODO
+            vor = handleNPointsVor(points);
         }
 
         trace.vor = vor;
@@ -179,6 +178,23 @@ public class Voronoi {
         }
 
         return vor;
+    }
+
+    private static VoronoiDiagram handleNPointsVor(List<Point> points) {
+        int splitIndex = points.size()/2;
+        List<Point> L1 = points.subList(0, splitIndex);
+        List<Point> L2 = points.subList(splitIndex, points.size());
+
+        VoronoiDiagram vor1 = Voronoi.Vor(L1).vor;
+        VoronoiDiagram vor2 = Voronoi.Vor(L2).vor;
+
+        return mergeVor(vor1, vor2);
+    }
+
+    private static VoronoiDiagram mergeVor(VoronoiDiagram vor1,
+                                           VoronoiDiagram vor2) {
+        // TODO Auto-generated method stub
+        return new VoronoiDiagram();
     }
 
 }
