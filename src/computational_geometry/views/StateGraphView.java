@@ -10,8 +10,7 @@ import computational_geometry.controller.Controller;
 import computational_geometry.model.Listener;
 import computational_geometry.model.Model;
 
-public class StateGraphView extends AbstractPanelView implements
-        Listener {
+public class StateGraphView extends AbstractPanelView implements Listener {
 
     private JLabel labelState;
     private JLabel labelNbPoints;
@@ -57,19 +56,17 @@ public class StateGraphView extends AbstractPanelView implements
 
     @Override
     public void polygonModified() {
-        labelNbPoints.setText(model.getGraph().getNbPoints()+"");
-        labelNbSegments.setText(model.getGraph().getNbSegments()+"");
+        labelNbPoints.setText(model.getGraph().getNbPoints() + "");
+        labelNbSegments.setText(model.getGraph().getNbSegments() + "");
 
         String label;
         if (model.getGraph().getNbPoints() < 3) {
             label = "No polygon";
             labelState.setForeground(Color.RED);
-        }
-        else if (model.isPolygonMonotonous()) {
+        } else if (model.isPolygonMonotonous()) {
             labelState.setForeground(Color.MAGENTA);
             label = "YES";
-        }
-        else {
+        } else {
             labelState.setForeground(Color.RED);
             label = "NO";
         }

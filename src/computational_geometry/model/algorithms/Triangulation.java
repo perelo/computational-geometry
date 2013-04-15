@@ -19,15 +19,16 @@ import computational_geometry.model.traces.MonotonTriangTrace.Event;
 import computational_geometry.model.traces.TriangulationTrace;
 
 public class Triangulation {
-	
-	/**
-	 * Compute the diagonals triangulating a monotonous polygon
-	 * @param polygon
-	 * @return
-	 */
+
+    /**
+     * Compute the diagonals triangulating a monotonous polygon
+     * @param polygon
+     * @return
+     */
     public static MonotonTriangTrace triangulateMonotonPolygon(Polygon polygon) {
-    	MonotonTriangTrace trace = new MonotonTriangTrace();
-        if (polygon.getNbPoints() <= 2 || !Polygons.isMonotonous(polygon)) return trace;
+        MonotonTriangTrace trace = new MonotonTriangTrace();
+        if (polygon.getNbPoints() <= 2 || !Polygons.isMonotonous(polygon))
+            return trace;
 
         Stack<Point> stack = new Stack<Point>();
 
@@ -39,7 +40,7 @@ public class Triangulation {
         trace.addEvent(traceEvent);
         traceEvent = trace.createNewEvent(points.elementAt(1));
         trace.addEvent(traceEvent);
-        
+
         stack.push(points.elementAt(0));
         stack.push(points.elementAt(1));
         for (int i = 2; i < points.size() - 1; ++i) {
@@ -55,12 +56,13 @@ public class Triangulation {
                     Point newHead = stack.peek();
                     double vectProd;
 
-                    Point v1 = new Point(newHead.x - oldHead.x, newHead.y - oldHead.y);
+                    Point v1 = new Point(newHead.x - oldHead.x, newHead.y
+                            - oldHead.y);
                     Point v2 = new Point(p.x - oldHead.x, p.y - oldHead.y);
                     vectProd = v1.x * v2.y - v2.x * v1.y;
 
-                    if ((vectProd >= 0 && side == Side.RIGHT) ||
-                        (vectProd <= 0 && side == Side.LEFT)) {
+                    if ((vectProd >= 0 && side == Side.RIGHT)
+                            || (vectProd <= 0 && side == Side.LEFT)) {
                         stack.push(oldHead);
                         break;
                     } else {
@@ -69,13 +71,13 @@ public class Triangulation {
                 }
                 stack.push(p);
 
-            } else {    // p.mark != side
+            } else { // p.mark != side
 
                 while (stack.size() > 1) {
-                	traceEvent.addDiagonal(new Diagonal(p, stack.pop()));
+                    traceEvent.addDiagonal(new Diagonal(p, stack.pop()));
                 }
                 stack.pop(); // pop last element
-                stack.push(points.elementAt(i-1));
+                stack.push(points.elementAt(i - 1));
                 stack.push(p);
             }
 
@@ -84,24 +86,25 @@ public class Triangulation {
         Point p = points.lastElement();
         traceEvent = trace.createNewEvent(p);
         trace.addEvent(traceEvent);
-        stack.pop();    // stack cannot be empty
-        for ( ; stack.size() > 1; ) {
-        	traceEvent.addDiagonal(new Diagonal(p, stack.pop()));
+        stack.pop(); // stack cannot be empty
+        for (; stack.size() > 1;) {
+            traceEvent.addDiagonal(new Diagonal(p, stack.pop()));
         }
 
         return trace;
     }
-    
-	/**
-	 * Compute the diagonals triangulating a simple polygon
-	 * @param polygon
-	 * @return
-	 */
+
+    /**
+     * Compute the diagonals triangulating a simple polygon
+     * @param polygon
+     * @return
+     */
     public static AlgoTrace triangulateSimplePolygon(Polygon polygon) {
-    	TriangulationTrace trace = new TriangulationTrace();
-        if (polygon.getNbPoints() < 3) return trace;
+        TriangulationTrace trace = new TriangulationTrace();
+        if (polygon.getNbPoints() < 3)
+            return trace;
         int dir = Utils.getDirection(polygon.getPoints());
-        if (dir > 0) {  // TODO the algo work w/o this
+        if (dir > 0) { // TODO the algo work w/o this
             System.err.println("wrong direction");
             return null;
         }
@@ -116,7 +119,8 @@ public class Triangulation {
             return triangulateMonotonPolygon(polygon);
         }
 
-        trace.setMonotonSubdivisionTrace(Monotonization.monotonisePolygon(polygon));
+        trace.setMonotonSubdivisionTrace(Monotonization
+                .monotonisePolygon(polygon));
 
         List<Polygon> monotonPolygons = new ArrayList<Polygon>();
 
@@ -144,7 +148,7 @@ public class Triangulation {
 
         // triangulate each monotonous piece found
         for (Polygon p : monotonPolygons) {
-        	trace.addMonotonPolygons(p);
+            trace.addMonotonPolygons(p);
             trace.addMonotonPolygonsTriangTrace(triangulateMonotonPolygon(p));
         }
         return trace;
@@ -156,20 +160,23 @@ public class Triangulation {
      * @param s
      * @param mark
      */
-    private static void calculatePolygon(Polygon polygon, Segment s, Segment.WayMark mark) {
+    private static void calculatePolygon(Polygon polygon, Segment s,
+            Segment.WayMark mark) {
 
         Segment nextSeg = null;
         Segment.WayMark nextMark = null;
         switch (mark) {
-        case UV :
-            if (s.isFlagUV()) return;
+        case UV:
+            if (s.isFlagUV())
+                return;
             s.setFlagUV(true);
             nextSeg = s.v.getNextSegInSortedList(s.getPosInVSortedList());
             nextMark = (s.v.equals(nextSeg.u) ? WayMark.UV : WayMark.VU);
             polygon.addPoint(s.v);
             break;
-        case VU :
-            if (s.isFlagVU()) return;
+        case VU:
+            if (s.isFlagVU())
+                return;
             s.setFlagVU(true);
             nextSeg = s.u.getNextSegInSortedList(s.getPosInUSortedList());
             nextMark = (s.u.equals(nextSeg.u) ? WayMark.UV : WayMark.VU);

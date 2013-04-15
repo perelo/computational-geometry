@@ -30,16 +30,19 @@ public class SweepState extends BinarySearchTree<Segment> {
             if (root.getRight() == null)
                 return root.getValue();
             else {
-                Segment firstLeftOfRightChild = findFirstLeftOfEvent(root.getRight());
-                if (firstLeftOfRightChild != null && firstLeftOfRightChild.isAtLeftOf(pEvent))
+                Segment firstLeftOfRightChild = findFirstLeftOfEvent(root
+                        .getRight());
+                if (firstLeftOfRightChild != null
+                        && firstLeftOfRightChild.isAtLeftOf(pEvent))
                     return firstLeftOfRightChild;
-                else return root.getValue();//root.getParent() != null ? root.getParent().getValue()
-                                              //       : null;
+                else
+                    return root.getValue();//root.getParent() != null ? root.getParent().getValue()
+                                           //       : null;
             }
         } else {
             if (root.getLeft() == null)
                 return root.getParent() != null ? root.getParent().getValue()
-                                                : null;
+                        : null;
             else
                 return findFirstLeftOfEvent(root.getLeft());
         }

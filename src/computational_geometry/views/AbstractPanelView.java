@@ -9,8 +9,7 @@ public abstract class AbstractPanelView extends AbstractView {
 
     protected JPanel panelView;
 
-    public AbstractPanelView(Model model,
-            Controller controller) {
+    public AbstractPanelView(Model model, Controller controller) {
         super(model, controller);
         createPanelView();
     }

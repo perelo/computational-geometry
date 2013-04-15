@@ -9,7 +9,7 @@ import java.util.EventListener;
  */
 public interface Listener extends EventListener {
 
-	// TODO : refactor method because it's not only polygons
+    // TODO : refactor method because it's not only polygons
     public void polygonModified();
 
 }

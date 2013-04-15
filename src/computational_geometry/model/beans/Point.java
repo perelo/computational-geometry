@@ -30,13 +30,13 @@ public class Point implements Comparable<Point> {
     public Type type;
     public int pos;
 
-    public Segment atBegin;     // needed for easy monotonization (e_{i-1})
+    public Segment atBegin; // needed for easy monotonization (e_{i-1})
     public Segment atEnd;
     private CircularList<Segment> diagonals;
     private List<Segment> segments;
     private boolean isSegmentsSorted;
-    
-    private boolean isInfinite;	// if this points represents infinite
+
+    private boolean isInfinite; // if this points represents infinite
 
     public final static int range = 2;
 
@@ -75,23 +75,24 @@ public class Point implements Comparable<Point> {
         return "(" + x + ", " + y + ", " + type + ")";
     }
 
-
     @Override
     public int compareTo(Point p) {
-        if (y < p.y) return -1;
+        if (y < p.y)
+            return -1;
         else if (y == p.y) {
-            if (x < p.x) return -1;
-            else if (x == p.x) return 0;
-            else return 1;
-        }
-        else return 1;
+            if (x < p.x)
+                return -1;
+            else if (x == p.x)
+                return 0;
+            else
+                return 1;
+        } else
+            return 1;
     }
 
     public boolean isInRange(Point p) {
-        return x > p.x - 2 * range &&
-               x < p.x + 2 * range &&
-               y > p.y - 2 * range &&
-               y < p.y + 2 * range;
+        return x > p.x - 2 * range && x < p.x + 2 * range
+                && y > p.y - 2 * range && y < p.y + 2 * range;
     }
 
     public void clearSegments() {
@@ -127,26 +128,25 @@ public class Point implements Comparable<Point> {
         for (int i = 0; i < segs.size(); ++i) {
             if (this.equals(segs.get(i).u)) {
                 segs.get(i).setPosInUSortedList(i);
-            }
-            else if (this.equals(segs.get(i).v)) {
+            } else if (this.equals(segs.get(i).v)) {
                 segs.get(i).setPosInVSortedList(i);
-            }
-            else {
+            } else {
                 System.err.println("incidents segments are not incident...");
             }
         }
     }
 
     public Segment getNextSegInSortedList(int posInSortedList) {
-        return getOrderedSegments().get((posInSortedList + 1) % getOrderedSegments().size());
+        return getOrderedSegments().get(
+                (posInSortedList + 1) % getOrderedSegments().size());
     }
 
-	public boolean isInfinite() {
-		return isInfinite;
-	}
+    public boolean isInfinite() {
+        return isInfinite;
+    }
 
-	public void setInfinite(boolean isInfinite) {
-		this.isInfinite = isInfinite;
-	}
+    public void setInfinite(boolean isInfinite) {
+        this.isInfinite = isInfinite;
+    }
 
 }

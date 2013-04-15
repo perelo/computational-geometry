@@ -11,15 +11,19 @@ import computational_geometry.model.beans.Point;
  */
 public class PointComparatorX implements Comparator<Point> {
 
-	@Override
-	public int compare(Point arg0, Point arg1) {
-        if (arg0.x < arg1.x) return -1;
+    @Override
+    public int compare(Point arg0, Point arg1) {
+        if (arg0.x < arg1.x)
+            return -1;
         else if (arg0.x == arg1.x) {
-            if (arg0.y < arg1.y) return -1;
-            else if (arg0.y == arg1.y) return 0;
-            else return 1;
-        }
-        else return 1;
-	}
+            if (arg0.y < arg1.y)
+                return -1;
+            else if (arg0.y == arg1.y)
+                return 0;
+            else
+                return 1;
+        } else
+            return 1;
+    }
 
 }

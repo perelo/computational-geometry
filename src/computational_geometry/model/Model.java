@@ -29,14 +29,14 @@ public class Model {
     private GraphType graphType;
 
     private int numSelectedPoint;
-    
+
     private boolean doSteps;
 
     protected EventListenerList listeners;
 
     public enum GraphType {
-        POLYGON (new Polygon(), createPolygonAlgorithms()),
-        SCATTERPLOT (new Scatterplot(), createScatterplotAlgorithms());
+        POLYGON(new Polygon(), createPolygonAlgorithms()), SCATTERPLOT(
+                new Scatterplot(), createScatterplotAlgorithms());
 
         private final Graph newGraph;
         private Map<String, GraphAlgorithm> algorithms;
@@ -49,12 +49,12 @@ public class Model {
         private static Map<String, GraphAlgorithm> createScatterplotAlgorithms() {
             Map<String, GraphAlgorithm> algorithms = new HashMap<String, GraphAlgorithm>();
 
-            algorithms.put("Voronoï", new GraphAlgorithm() {
-				@Override
-				public void run(Graph graph) {
-					trace = Voronoi.ComputeVoronoiDiagram(graph.getPoints());
-				}
-			});
+            algorithms.put("Voronoi", new GraphAlgorithm() {
+                @Override
+                public void run(Graph graph) {
+                    trace = Voronoi.ComputeVoronoiDiagram(graph.getPoints());
+                }
+            });
 
             return algorithms;
         }
@@ -65,7 +65,8 @@ public class Model {
             algorithms.put("Triangulation (monoton)", new GraphAlgorithm() {
                 @Override
                 public void run(Graph graph) {
-                    trace = Triangulation.triangulateMonotonPolygon((Polygon) graph);
+                    trace = Triangulation
+                            .triangulateMonotonPolygon((Polygon) graph);
                 }
             });
 
@@ -79,7 +80,8 @@ public class Model {
             algorithms.put("Triangulation (simple)", new GraphAlgorithm() {
                 @Override
                 public void run(Graph graph) {
-                    trace = Triangulation.triangulateSimplePolygon((Polygon) graph);
+                    trace = Triangulation
+                            .triangulateSimplePolygon((Polygon) graph);
                 }
             });
 
@@ -103,7 +105,7 @@ public class Model {
         }
 
         @Override
-        public String toString() {      // first letter capitalized
+        public String toString() { // first letter capitalized
             String s = super.toString();
             return s.substring(0, 1) + s.substring(1).toLowerCase();
         }
@@ -161,13 +163,14 @@ public class Model {
     }
 
     public void eraseGraph() {
-//        graph = graphType.getNewGraph(new CircularList<Point>());
+        //        graph = graphType.getNewGraph(new CircularList<Point>());
         graph.clear();
 
         firePolygonModified();
     }
 
-    public void generateRandPolygon(int n, int minX, int maxX, int minY, int maxY) {
+    public void generateRandPolygon(int n, int minX, int maxX, int minY,
+            int maxY) {
         graph.generateNewPoints(n, minX, maxX, minY, maxY);
         firePolygonModified();
     }
@@ -175,8 +178,7 @@ public class Model {
     public boolean isPolygonMonotonous() {
         if (graphType == GraphType.POLYGON) {
             return Polygons.isMonotonous((Polygon) graph);
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -200,19 +202,19 @@ public class Model {
     }
 
     public boolean doSteps() {
-		return doSteps;
-	}
+        return doSteps;
+    }
 
-	public void setDoSteps(boolean doSteps) {
-		this.doSteps = doSteps;
-		graph.clearAlgorithms();
-		firePolygonModified();
-	}
+    public void setDoSteps(boolean doSteps) {
+        this.doSteps = doSteps;
+        graph.clearAlgorithms();
+        firePolygonModified();
+    }
 
-	public void addAlgorithmToExecute(GraphAlgorithm algo) {
+    public void addAlgorithmToExecute(GraphAlgorithm algo) {
         graph.addAlgorithm(algo);
         if (doSteps) {
-	        algo.run(graph);
+            algo.run(graph);
         }
         firePolygonModified();
     }
@@ -227,27 +229,30 @@ public class Model {
     }
 
     public void firePolygonModified() {
-    	if (!doSteps) {
-	        graph.calculate();
-    	}
+        if (!doSteps) {
+            graph.calculate();
+        }
 
-        Listener[] polygonListeners = (Listener[]) listeners.getListeners(Listener.class);
+        Listener[] polygonListeners = (Listener[]) listeners
+                .getListeners(Listener.class);
         for (Listener l : polygonListeners) {
             l.polygonModified();
         }
     }
-    
+
     public GraphAlgorithm getFirstAlgo() {
-    	if (graph.getAlgorithms().isEmpty()) return null;
-    	else return ((GraphAlgorithm)graph.getAlgorithms().toArray()[0]);
+        if (graph.getAlgorithms().isEmpty())
+            return null;
+        else
+            return ((GraphAlgorithm) graph.getAlgorithms().toArray()[0]);
     }
 
-	public void nextStepToAlgorithmTrace() {
-		GraphAlgorithm algo = getFirstAlgo();
-		AlgoTrace trace = (algo != null) ? algo.getTrace() : null;
-		if (trace != null) {
-			trace.nextStep();
-		}
-		firePolygonModified();
-	}
+    public void nextStepToAlgorithmTrace() {
+        GraphAlgorithm algo = getFirstAlgo();
+        AlgoTrace trace = (algo != null) ? algo.getTrace() : null;
+        if (trace != null) {
+            trace.nextStep();
+        }
+        firePolygonModified();
+    }
 }

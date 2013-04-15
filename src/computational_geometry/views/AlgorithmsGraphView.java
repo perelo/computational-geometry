@@ -61,8 +61,10 @@ public class AlgorithmsGraphView extends AbstractPanelView {
                 algorithmButtons.put(algoName, algorithmButton);
                 algorithmButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent arg0) {
-                        JRadioButton b = algorithmButtons.get(arg0.getActionCommand());
-                        controller.notifyChangeAlgorithmStateRequest(b.getActionCommand(), b.isSelected());
+                        JRadioButton b = algorithmButtons.get(arg0
+                                .getActionCommand());
+                        controller.notifyChangeAlgorithmStateRequest(
+                                b.getActionCommand(), b.isSelected());
                     }
                 });
                 panelAlgoPanel.add(algorithmButton);
@@ -83,12 +85,17 @@ public class AlgorithmsGraphView extends AbstractPanelView {
 
     @Override
     public void polygonModified() {
-        ((CardLayout)panelAlgorithmsButtons.getLayout()).show(panelAlgorithmsButtons, model.getGraphType().toString());
+        ((CardLayout) panelAlgorithmsButtons.getLayout()).show(
+                panelAlgorithmsButtons, model.getGraphType().toString());
 
-        for (Entry<String, JRadioButton> algoButton : algorithmButtons.entrySet()) {
+        for (Entry<String, JRadioButton> algoButton : algorithmButtons
+                .entrySet()) {
             algoButton.getValue().setSelected(
-                          model.getGraph().getAlgorithms().contains(
-                              model.getGraphType().getAlgorithms().get(algoButton.getKey())));
+                    model.getGraph()
+                            .getAlgorithms()
+                            .contains(
+                                    model.getGraphType().getAlgorithms()
+                                            .get(algoButton.getKey())));
         }
     }
 

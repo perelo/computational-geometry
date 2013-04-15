@@ -14,34 +14,34 @@ import computational_geometry.views.SwingDrawer;
  *
  */
 public class HullResult extends SimpleAlgoResult {
-	
-	private List<Segment> segments;
 
-	@Override
-	public void drawFullResult(Graphics g) {
-		Color c = g.getColor();
-		g.setColor(Color.GREEN);
-		Drawer drawer = SwingDrawer.getInstance(g);
-		for (Segment s : segments) {
-			drawer.drawSegment(s);
-		}
-		g.setColor(c);
-	}
+    private List<Segment> segments;
 
-	public HullResult() {
-		this.segments = new ArrayList<Segment>();
-	}
+    @Override
+    public void drawFullResult(Graphics g) {
+        Color c = g.getColor();
+        g.setColor(Color.GREEN);
+        Drawer drawer = SwingDrawer.getInstance(g);
+        for (Segment s : segments) {
+            drawer.drawSegment(s);
+        }
+        g.setColor(c);
+    }
 
-	public void addSegment(Segment s) {
-		segments.add(s);
-	}
-	
-	public void removeSegment(Segment s) {
-		segments.remove(s);
-	}
-	
-	public List<Segment> getSegments() {
-		return segments;
-	}
+    public HullResult() {
+        this.segments = new ArrayList<Segment>();
+    }
+
+    public void addSegment(Segment s) {
+        segments.add(s);
+    }
+
+    public void removeSegment(Segment s) {
+        segments.remove(s);
+    }
+
+    public List<Segment> getSegments() {
+        return segments;
+    }
 
 }

@@ -35,8 +35,8 @@ public class DrawGraphView extends AbstractPanelView implements Listener {
     JRadioButton drawType;
     JRadioButton drawCoordinates;
     JRadioButton drawPointPos;
-	private JRadioButton stepByStep;
-	private JButton nextStep;
+    private JRadioButton stepByStep;
+    private JButton nextStep;
 
     public DrawGraphView(Model model, Controller controller) {
         super(model, controller);
@@ -47,7 +47,7 @@ public class DrawGraphView extends AbstractPanelView implements Listener {
 
         // Panel des boutons
         JPanel panelBoutons = new JPanel(new BorderLayout());
-        
+
         JPanel panelActions = new JPanel();
 
         // Creation du champs texte "Nombre de points a generer"
@@ -72,38 +72,38 @@ public class DrawGraphView extends AbstractPanelView implements Listener {
             public void actionPerformed(ActionEvent evt) {
                 // Suppression des points et des segments
                 int n = Integer.parseInt(textNombrePoint.getText());
-                controller.notifyGenerateRandPolygonRequest(n, 2, canvas.getWidth(),
-                                                               2, canvas.getHeight());
+                controller.notifyGenerateRandPolygonRequest(n, 2,
+                        canvas.getWidth(), 2, canvas.getHeight());
             }
         });
-        
+
         // Creation du bouton "etape par etape"
         stepByStep = new JRadioButton("steps");
         stepByStep.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				nextStep.setVisible(stepByStep.isSelected());
-				controller.stepByStepRequested(stepByStep.isSelected());
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                nextStep.setVisible(stepByStep.isSelected());
+                controller.stepByStepRequested(stepByStep.isSelected());
+            }
+        });
         stepByStep.setSelected(model.doSteps());
-        
+
         // Creation du bouton NextStep
         nextStep = new JButton("Next Step");
         nextStep.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.nextStepRequested();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.nextStepRequested();
+            }
+        });
         nextStep.setVisible(false);
-        
+
         panelActions.add(effacer);
         panelActions.add(rand);
         panelActions.add(textNombrePoint);
         panelActions.add(stepByStep);
         panelActions.add(nextStep);
-        
+
         JPanel panelDebug = new JPanel();
 
         drawMark = new JRadioButton("draw mark");
@@ -152,13 +152,13 @@ public class DrawGraphView extends AbstractPanelView implements Listener {
         drawGroup.add(drawType);
         drawGroup.add(drawCoordinates);
         drawGroup.add(drawPointPos);
-        
+
         panelDebug.add(drawNone);
         panelDebug.add(drawMark);
         panelDebug.add(drawType);
         panelDebug.add(drawCoordinates);
         panelDebug.add(drawPointPos);
-        
+
         panelBoutons.add(panelActions, BorderLayout.NORTH);
         panelBoutons.add(panelDebug, BorderLayout.SOUTH);
 
@@ -174,15 +174,17 @@ public class DrawGraphView extends AbstractPanelView implements Listener {
 
     @Override
     public void polygonModified() {
-    	GraphAlgorithm algo = model.getFirstAlgo();
-    	AlgoTrace trace = (algo != null) ? algo.getTrace() : null;
-		nextStep.setVisible((trace != null) ? !trace.isDone() && stepByStep.isSelected() : false);
+        GraphAlgorithm algo = model.getFirstAlgo();
+        AlgoTrace trace = (algo != null) ? algo.getTrace() : null;
+        nextStep.setVisible((trace != null) ? !trace.isDone()
+                && stepByStep.isSelected() : false);
         canvas.repaint();
     }
 
 }
 
-class CanvasSaisirPointsAfficherSegments extends JPanel implements MouseListener, MouseMotionListener {
+class CanvasSaisirPointsAfficherSegments extends JPanel implements
+        MouseListener, MouseMotionListener {
     private static final long serialVersionUID = 1L;
 
     private DrawGraphView attachedPanel;
@@ -203,7 +205,7 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements MouseListener
     public void paint(Graphics g) {
         g.clearRect(0, 0, getWidth(), getHeight()); // Erase background
         Graph graph = attachedPanel.model.getGraph();
-        
+
         // this is terrible
         Voronoi.bound = g.getClipBounds();
 
@@ -211,36 +213,36 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements MouseListener
         drawPoints(g, graph.getPoints());
 
         GraphAlgorithm algo = attachedPanel.model.getFirstAlgo();
-    	AlgoTrace trace = (algo != null) ? algo.getTrace() : null;
-    	if (trace != null) {
-    		if (attachedPanel.model.doSteps() && !trace.isDone()) {
-    			trace.drawCurrentState(g);
-    		}
-    		else {
-    			trace.drawFullResult(g);
-    		}
-    	}
+        AlgoTrace trace = (algo != null) ? algo.getTrace() : null;
+        if (trace != null) {
+            if (attachedPanel.model.doSteps() && !trace.isDone()) {
+                trace.drawCurrentState(g);
+            } else {
+                trace.drawFullResult(g);
+            }
+        }
     }
 
     private void drawPoints(Graphics g, CircularList<Point> points) {
         for (int n = 0; n < points.size(); ++n) {
             Point p = points.elementAt(n);
             if (attachedPanel.drawPointPos.isSelected()) {
-                g.drawString(n+"", p.x, p.y-20);
+                g.drawString(n + "", p.x, p.y - 20);
             }
 
             if (n == attachedPanel.model.getNumSelectedPoint())
                 g.setColor(selectedPointColor);
-            else g.setColor(pointColor);
+            else
+                g.setColor(pointColor);
 
             drawPoint(g, p);
         }
     }
 
     private void drawPoint(Graphics g, Point p) {
-    	Color c = g.getColor();
-    	g.setColor(pointColor);
-    	Drawer drawer = SwingDrawer.getInstance(g);
+        Color c = g.getColor();
+        g.setColor(pointColor);
+        Drawer drawer = SwingDrawer.getInstance(g);
         if (attachedPanel.drawMark.isSelected()) {
             drawer.drawMark(p);
         }
@@ -255,11 +257,11 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements MouseListener
     }
 
     private void drawSegments(Graphics g, CircularList<Segment> segments) {
-    	Color c = g.getColor();
-    	g.setColor(segmentColor);
-    	Drawer drawer = SwingDrawer.getInstance(g);
+        Color c = g.getColor();
+        g.setColor(segmentColor);
+        Drawer drawer = SwingDrawer.getInstance(g);
         for (Segment s : segments) {
-        	drawer.drawSegment(s);
+            drawer.drawSegment(s);
         }
         g.setColor(c);
     }
@@ -272,9 +274,11 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements MouseListener
     @Override
     public void mousePressed(MouseEvent evt) {
         if (evt.getButton() == 1) {
-            attachedPanel.controller.notifyPointAddRequest(evt.getX(), evt.getY());
+            attachedPanel.controller.notifyPointAddRequest(evt.getX(),
+                    evt.getY());
         } else {
-            attachedPanel.controller.notifyPointRemoveRequest(evt.getX(), evt.getY());
+            attachedPanel.controller.notifyPointRemoveRequest(evt.getX(),
+                    evt.getY());
         }
     }
 
@@ -297,11 +301,14 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements MouseListener
     }
 
     @Override
-    public void mouseReleased(MouseEvent evt) { }
+    public void mouseReleased(MouseEvent evt) {}
+
     @Override
-    public void mouseEntered(MouseEvent evt) { }
+    public void mouseEntered(MouseEvent evt) {}
+
     @Override
-    public void mouseExited(MouseEvent evt) { }
+    public void mouseExited(MouseEvent evt) {}
+
     @Override
-    public void mouseClicked(MouseEvent evt) { }
+    public void mouseClicked(MouseEvent evt) {}
 }

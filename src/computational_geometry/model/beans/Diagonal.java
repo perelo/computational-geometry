@@ -9,13 +9,12 @@ package computational_geometry.model.beans;
 public class Diagonal extends Segment {
 
     public Diagonal(Point u, Point v) {
-        super();	// use this so we don't do crap u.atBegin = this...
+        super(); // use this so we don't do crap u.atBegin = this...
         this.u = u;
         this.v = v;
         this.helper = null;
         this.u.addDiagonal(this);
         this.v.addDiagonal(this);
     }
-
 
 }

@@ -24,17 +24,30 @@ public class CrossProdComparator implements Comparator<Segment> {
     public int compare(Segment s1, Segment s2) {
         Point a, b;
 
-        if      (s1.u.equals(origin)) a = s1.v;
-        else if (s1.v.equals(origin)) a = s1.u;
-        else { System.err.println("not from origin"); return 0; }
+        if (s1.u.equals(origin))
+            a = s1.v;
+        else if (s1.v.equals(origin))
+            a = s1.u;
+        else {
+            System.err.println("not from origin");
+            return 0;
+        }
 
-        if      (s2.u.equals(origin)) b = s2.v;
-        else if (s2.v.equals(origin)) b = s2.u;
-        else { System.err.println("not from origin"); return 0; }
+        if (s2.u.equals(origin))
+            b = s2.v;
+        else if (s2.v.equals(origin))
+            b = s2.u;
+        else {
+            System.err.println("not from origin");
+            return 0;
+        }
 
-        if      (a.y > origin.y && b.y < origin.y) return 1;
-        else if (a.y < origin.y && b.y > origin.y) return -1;
-        else return (int) Utils.crossProduct(a, origin, b);
+        if (a.y > origin.y && b.y < origin.y)
+            return 1;
+        else if (a.y < origin.y && b.y > origin.y)
+            return -1;
+        else
+            return (int) Utils.crossProduct(a, origin, b);
     }
 
 }

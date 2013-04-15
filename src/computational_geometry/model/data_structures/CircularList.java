@@ -12,8 +12,8 @@ import java.util.ListIterator;
  *
  * @param <T> : The type of the nodes
  */
-public class CircularList<T extends Comparable<T>>
-                            implements List<T>, Iterable<T> {
+public class CircularList<T extends Comparable<T>> implements List<T>,
+        Iterable<T> {
 
     private LinkNode<T> first;
     private int size;
@@ -27,8 +27,9 @@ public class CircularList<T extends Comparable<T>>
         if (i < 0 || i >= size())
             return null;
 
-        LinkNode<T> elem = first;   // shouldn't be null cuz we tested w/ size
-        for (int j = 0; j++ < i; elem = elem.getNext());
+        LinkNode<T> elem = first; // shouldn't be null cuz we tested w/ size
+        for (int j = 0; j++ < i; elem = elem.getNext())
+            ;
 
         return elem;
     }
@@ -40,7 +41,7 @@ public class CircularList<T extends Comparable<T>>
 
     @Override
     public boolean add(T obj) {
-        addLast(obj);   // like a Vector
+        addLast(obj); // like a Vector
         return true;
     }
 
@@ -58,8 +59,7 @@ public class CircularList<T extends Comparable<T>>
             first = newElem;
             first.setNext(first);
             first.setPrev(first);
-        }
-        else {
+        } else {
             newElem = first.insertBefore(newElem);
             if (atFirst) {
                 first = newElem;
@@ -68,17 +68,17 @@ public class CircularList<T extends Comparable<T>>
         ++size;
     }
 
-//    public int findPos(T obj) {
-//        if (first == null) return -1;
-//
-//        int i = 0;
-//        LinkNode<T> elem = new LinkNode<T>(first);
-//        for ( ; ! elem.getNext().equals(first) &&
-//                ! elem.getValue().equals(obj); elem = elem.getNext())
-//            ++i;
-//
-//        return elem.getValue().equals(obj) ? i : -1;
-//    }
+    //    public int findPos(T obj) {
+    //        if (first == null) return -1;
+    //
+    //        int i = 0;
+    //        LinkNode<T> elem = new LinkNode<T>(first);
+    //        for ( ; ! elem.getNext().equals(first) &&
+    //                ! elem.getValue().equals(obj); elem = elem.getNext())
+    //            ++i;
+    //
+    //        return elem.getValue().equals(obj) ? i : -1;
+    //    }
 
     @Override
     public int size() {
@@ -87,7 +87,8 @@ public class CircularList<T extends Comparable<T>>
 
     public T removeElementAt(int i) {
         LinkNode<T> elem = getNode(i);
-        if (elem == null) return null;
+        if (elem == null)
+            return null;
         --size;
         if (first.equals(elem)) {
             first = elem.getNext();
@@ -106,10 +107,11 @@ public class CircularList<T extends Comparable<T>>
     public String forward() {
         StringBuilder sb = new StringBuilder();
 
-        for (LinkNode<T> elem = first; ; ) {
+        for (LinkNode<T> elem = first;;) {
             sb.append(elem.getValue().toString());
             elem = elem.getNext();
-            if (elem.equals(first)) break;
+            if (elem.equals(first))
+                break;
         }
         return sb.toString();
     }
@@ -117,10 +119,11 @@ public class CircularList<T extends Comparable<T>>
     public String backward() {
         StringBuilder sb = new StringBuilder();
 
-        for (LinkNode<T> elem = first; ; ) {
+        for (LinkNode<T> elem = first;;) {
             sb.append(elem.getValue().toString());
             elem = elem.getPrev();
-            if (elem.equals(first)) break;
+            if (elem.equals(first))
+                break;
         }
         return sb.toString();
     }
@@ -156,7 +159,7 @@ public class CircularList<T extends Comparable<T>>
 
     @Override
     public boolean isEmpty() {
-        return ! (size() > 0);
+        return !(size() > 0);
     }
 
     @Override
@@ -191,7 +194,7 @@ public class CircularList<T extends Comparable<T>>
         Object[] array = new Object[size()];
         int i = 0;
         for (Object o : this) {
-            array[i++] = (T)o;
+            array[i++] = (T) o;
         }
         return array;
     }
@@ -258,7 +261,7 @@ public class CircularList<T extends Comparable<T>>
         }
 
         @Override
-        public void remove() {  // unimplemented
+        public void remove() { // unimplemented
             System.err.println("ListIterator.remove() not implemented");
         }
 
@@ -277,7 +280,8 @@ public class CircularList<T extends Comparable<T>>
 
         @Override
         public int previousIndex() {
-            System.err.println("previouListIterator.previousIndex() not implemented");
+            System.err
+                    .println("previouListIterator.previousIndex() not implemented");
             // TODO Auto-generated method stub
             return 0;
         }

@@ -8,13 +8,13 @@ import computational_geometry.model.traces.AlgoTrace;
  *
  */
 public abstract class GraphAlgorithm {
-	
-	protected AlgoTrace trace;
+
+    protected AlgoTrace trace;
 
     public abstract void run(Graph graph);
 
-	public AlgoTrace getTrace() {
-		return trace;
-	}
+    public AlgoTrace getTrace() {
+        return trace;
+    }
 
 }

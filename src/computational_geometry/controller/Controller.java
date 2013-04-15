@@ -53,8 +53,7 @@ public class Controller {
         if (algo != null) {
             if (state) {
                 model.addAlgorithmToExecute(algo);
-            }
-            else {
+            } else {
                 model.removeAlgorithmToExecute(algo);
             }
         }
@@ -65,17 +64,17 @@ public class Controller {
     }
 
     public void notifyGenerateRandPolygonRequest(int n, int minX, int maxX,
-                                                        int minY, int maxY) {
+            int minY, int maxY) {
         model.eraseGraph();
         model.generateRandPolygon(n, minX, maxX, minY, maxY);
     }
 
-	public void stepByStepRequested(boolean b) {
-		model.setDoSteps(b);
-	}
+    public void stepByStepRequested(boolean b) {
+        model.setDoSteps(b);
+    }
 
-	public void nextStepRequested() {
-		model.nextStepToAlgorithmTrace();
-	}
+    public void nextStepRequested() {
+        model.nextStepToAlgorithmTrace();
+    }
 
 }

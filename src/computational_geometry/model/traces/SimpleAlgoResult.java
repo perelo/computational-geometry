@@ -9,21 +9,20 @@ import java.awt.Graphics;
  */
 public abstract class SimpleAlgoResult implements AlgoTrace {
 
-	@Override
-	public void nextStep() { }
+    @Override
+    public void nextStep() {}
 
-	@Override
-	public boolean hasStep() {
-		return false;
-	}
+    @Override
+    public boolean hasStep() {
+        return false;
+    }
 
-	@Override
-	public boolean isDone() {
-		return true;
-	}
-	
-	@Override
-	public void drawCurrentState(Graphics g) {
-	}
+    @Override
+    public boolean isDone() {
+        return true;
+    }
+
+    @Override
+    public void drawCurrentState(Graphics g) {}
 
 }

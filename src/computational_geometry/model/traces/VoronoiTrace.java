@@ -14,20 +14,20 @@ import computational_geometry.views.SwingDrawer;
  *
  */
 public class VoronoiTrace extends SimpleAlgoResult {
-	
-	// TODO list of vor diagrams and list of dividing chain
-	public VoronoiDiagram vor;
 
-	@Override
-	public void drawFullResult(Graphics g) {
-		Iterator<Edge> it = vor.getEdgeIterator();
-		while(it.hasNext()) {
-			VorEdge e = (VorEdge) it.next();
-			if (e.getSeg() != null && e.getTwin().isDrawn == false) {
-				SwingDrawer.getInstance(g).drawSegment(e.getSeg());
-				e.isDrawn = true;
-			}
-		}
-	}
-	
+    // TODO list of vor diagrams and list of dividing chain
+    public VoronoiDiagram vor;
+
+    @Override
+    public void drawFullResult(Graphics g) {
+        Iterator<Edge> it = vor.getEdgeIterator();
+        while (it.hasNext()) {
+            VorEdge e = (VorEdge) it.next();
+            if (e.getSeg() != null && e.getTwin().isDrawn == false) {
+                SwingDrawer.getInstance(g).drawSegment(e.getSeg());
+                e.isDrawn = true;
+            }
+        }
+    }
+
 }

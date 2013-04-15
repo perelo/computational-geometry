@@ -15,67 +15,68 @@ import computational_geometry.model.traces.MonotonTriangTrace;
 import computational_geometry.model.traces.MonotonTriangTrace.Event;
 
 public class Monotonization {
-	
-	/**
-	 * Compute the diagonals monotonizing a simple polygon
-	 * @param polygon
-	 * @return
-	 */
+
+    /**
+     * Compute the diagonals monotonizing a simple polygon
+     * @param polygon
+     * @return
+     */
     public static MonotonTriangTrace monotonisePolygon(Polygon polygon) {
-    	MonotonTriangTrace trace = new MonotonTriangTrace();
-        if (Polygons.isMonotonous(polygon)) return trace;
+        MonotonTriangTrace trace = new MonotonTriangTrace();
+        if (Polygons.isMonotonous(polygon))
+            return trace;
 
         int dir = Utils.getDirection(polygon.getPoints());
         Polygons.markPointsWithType(polygon.getPoints(), dir);
 
         // we need the nodes, not only the point, so we can get v_{i} and v_{i-1}
-        PriorityQueue<LinkNode<Point>> queue =
-                new PriorityQueue<LinkNode<Point>>(polygon.getPoints().getNodes());
-        SweepState sweepState = new SweepState();       // binary tree A
+        PriorityQueue<LinkNode<Point>> queue = new PriorityQueue<LinkNode<Point>>(
+                polygon.getPoints().getNodes());
+        SweepState sweepState = new SweepState(); // binary tree A
 
-        for ( ; ! queue.isEmpty(); ) {
+        for (; !queue.isEmpty();) {
             LinkNode<Point> v = queue.poll();
             Event traceEvent = trace.createNewEvent(v.getValue());
             trace.addEvent(traceEvent);
             sweepState.setEvent(v.getValue());
 
             switch (v.getValue().type) {
-            case START : {
+            case START: {
                 handleStartVertex(v, sweepState, dir);
                 break;
             }
-            case END : {
+            case END: {
                 handleEndVertex(v, sweepState, traceEvent, dir);
                 break;
             }
-            case SPLIT : {
+            case SPLIT: {
                 handleSplitVertex(v, sweepState, traceEvent, dir);
                 break;
             }
-            case MERGE : {
+            case MERGE: {
                 handleMergeVertex(v, sweepState, traceEvent, dir);
                 break;
             }
-            case UNKNOWN : {
+            case UNKNOWN: {
                 break;
             }
-            default : {
+            default: {
                 handleRegularVertex(v, sweepState, traceEvent, dir);
                 break;
             }
             }
         }
-        
+
         return trace;
     }
 
     private static Segment getEi(Point p, boolean im, int dir) { // im = i - 1
-        if (p == null) return null;
+        if (p == null)
+            return null;
 
         if ((im && dir > 0) || (!im && dir < 0)) {
             return p.atEnd;
-        }
-        else {
+        } else {
             return p.atBegin;
         }
     }
@@ -96,7 +97,7 @@ public class Monotonization {
         // get e_{i-1}
         Segment eim = getEi(v.getValue(), true, dir);
         if (eim.helper.type == Point.Type.MERGE) {
-        	traceEvent.addDiagonal(new Diagonal(v.getValue(), eim.helper));
+            traceEvent.addDiagonal(new Diagonal(v.getValue(), eim.helper));
         }
         sweepState.delete(eim);
     }
@@ -120,13 +121,13 @@ public class Monotonization {
         // get e_{i-1}
         Segment eim = getEi(v.getValue(), true, dir);
         if (eim.helper.type == Point.Type.MERGE) {
-        	traceEvent.addDiagonal(new Diagonal(v.getValue(), eim.helper));
+            traceEvent.addDiagonal(new Diagonal(v.getValue(), eim.helper));
         }
         sweepState.delete(eim);
 
         Segment ej = sweepState.findFirstLeftOfEvent(sweepState.getRoot());
         if (ej.helper.type == Point.Type.MERGE) {
-        	traceEvent.addDiagonal(new Diagonal(v.getValue(), ej.helper));
+            traceEvent.addDiagonal(new Diagonal(v.getValue(), ej.helper));
         }
         ej.helper = v.getValue();
     }
@@ -140,7 +141,7 @@ public class Monotonization {
             Segment eim = getEi(v.getValue(), true, dir);
 
             if (eim.helper.type == Point.Type.MERGE) {
-            	traceEvent.addDiagonal(new Diagonal(eim.helper, v.getValue()));
+                traceEvent.addDiagonal(new Diagonal(eim.helper, v.getValue()));
             }
             sweepState.delete(eim);
 
@@ -153,13 +154,14 @@ public class Monotonization {
 
             Segment ej = sweepState.findFirstLeftOfEvent(sweepState.getRoot());
             if (ej.helper.type == Point.Type.MERGE) {
-            	traceEvent.addDiagonal(new Diagonal(v.getValue(), ej.helper));
+                traceEvent.addDiagonal(new Diagonal(v.getValue(), ej.helper));
             }
             ej.helper = v.getValue();
 
         } else {
-            System.err.println("handle unregular vertex in handleRegularVertex()," +
-                    "should not have happened");
+            System.err
+                    .println("handle unregular vertex in handleRegularVertex(),"
+                            + "should not have happened");
         }
     }
 

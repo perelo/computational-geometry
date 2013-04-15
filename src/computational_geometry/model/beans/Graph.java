@@ -47,8 +47,8 @@ public abstract class Graph {
      */
     public void generateNewPoints(int n, int minX, int maxX, int minY, int maxY) {
         for (int i = 0; i < n; ++i) {
-            points.add(new Point(minX + Utils.rand(maxX - minX),
-                                 minY + Utils.rand(maxY - minY)));
+            points.add(new Point(minX + Utils.rand(maxX - minX), minY
+                    + Utils.rand(maxY - minY)));
         }
     }
 
@@ -130,8 +130,8 @@ public abstract class Graph {
         }
     }
 
-	public void clearAlgorithms() {
-		algorithms.clear();
-	}
+    public void clearAlgorithms() {
+        algorithms.clear();
+    }
 
 }

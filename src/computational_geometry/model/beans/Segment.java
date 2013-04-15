@@ -25,9 +25,8 @@ public class Segment implements Comparable<Segment> {
     private boolean flagVU;
 
     public static int yComp = -1;
-    
-    public Segment() {
-    }
+
+    public Segment() {}
 
     public Segment(Point u, Point v) {
         this.u = u;
@@ -49,8 +48,8 @@ public class Segment implements Comparable<Segment> {
     }
 
     public boolean equals(Segment s) {
-        if ((u.equals(s.u) && v.equals(s.v)) ||
-            (u.equals(s.v) && v.equals(s.u))) {
+        if ((u.equals(s.u) && v.equals(s.v))
+                || (u.equals(s.v) && v.equals(s.u))) {
             return true;
         } else {
             return false;
@@ -59,9 +58,8 @@ public class Segment implements Comparable<Segment> {
 
     @Override
     public int compareTo(Segment s) {
-        if ((yComp < u.y && yComp < v.y) ||
-            (yComp > s.u.y && yComp > s.v.y))
-            return -1;  // should not happen in our algorithms
+        if ((yComp < u.y && yComp < v.y) || (yComp > s.u.y && yComp > s.v.y))
+            return -1; // should not happen in our algorithms
         return getXAtStaticY().compareTo(s.getXAtStaticY());
     }
 
@@ -79,12 +77,12 @@ public class Segment implements Comparable<Segment> {
 
         // a*x + b = y
         double a, b;
-        a = (double)(u.y - v.y) / (u.x - v.x);
+        a = (double) (u.y - v.y) / (u.x - v.x);
         b = u.y - (a * u.x);
         return (yComp - b) / a;
     }
 
-	public int getPosInUSortedList() {
+    public int getPosInUSortedList() {
         return posInUSortedList;
     }
 

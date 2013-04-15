@@ -29,22 +29,24 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     public void insert(T obj) {
-        if (obj == null) return;
+        if (obj == null)
+            return;
         root = insertImpl(root, new TreeNode<T>(obj));
     }
 
     protected void deleteImpl(TreeNode<T> root, T obj) {
         TreeNode<T> node = searchImpl(root, obj);
-        if (node == null) return;
+        if (node == null)
+            return;
 
         if (node.isLeaf()) {
 
             TreeNode<T> parent = node.getParent();
-            if (parent == null) {       // node is the root
+            if (parent == null) { // node is the root
                 this.root = null;
             } else {
-                if (parent.getLeft() != null &&
-                    parent.getLeft().getValue().equals(node.getValue())) {
+                if (parent.getLeft() != null
+                        && parent.getLeft().getValue().equals(node.getValue())) {
                     parent.setLeft(null);
                 } else {
                     parent.setRight(null);
@@ -87,11 +89,9 @@ public class BinarySearchTree<T extends Comparable<T>> {
         int comp = obj.compareTo(root.getValue());
         if (comp == 0) {
             return root;
-        }
-        else if (comp < 0) {
+        } else if (comp < 0) {
             return searchImpl(root.getLeft(), obj);
-        }
-        else {
+        } else {
             return searchImpl(root.getRight(), obj);
 
         }
@@ -103,7 +103,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     protected void displayImpl(TreeNode<T> root) {
-        if (root == null) return;
+        if (root == null)
+            return;
 
         displayImpl(root.getLeft());
         System.out.println(root.getValue().toString());
