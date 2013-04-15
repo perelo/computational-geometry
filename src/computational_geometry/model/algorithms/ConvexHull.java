@@ -19,6 +19,7 @@ public class ConvexHull {
 
     /**
      * Compute the convex hull of a simple polygon
+     * TODO : review to result points and not segments
      * @param polygon
      * @return
      */
