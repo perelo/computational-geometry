@@ -7,7 +7,6 @@ import java.util.List;
 
 import computational_geometry.model.beans.Line;
 import computational_geometry.model.beans.Point;
-import computational_geometry.model.beans.Segment;
 import computational_geometry.model.core.Lines;
 import computational_geometry.model.core.PointComparatorX;
 import computational_geometry.model.data_structures.HalfEdge.Vert;
@@ -74,11 +73,11 @@ public class Voronoi {
         VorCell f1 = vor.new VorCell(p1, e1);
         VorCell f2 = vor.new VorCell(p2, e2);
 
-        Point q1, q2;
-        q1 = bisector.findUpLeftPoint(bound);
-        q2 = bisector.findDownRightPoint(bound);
-        e1.fill(new Segment(q2, q1), null, e2, f1, null);
-        e2.fill(new Segment(q1, q2), null, e1, f2, null);
+        Vert v1 = vor.new Vert(bisector.findDownRightPoint(bound), e1);
+        Vert v2 = vor.new Vert(bisector.findUpLeftPoint(bound), e2);
+
+        e1.fill(v1, e2, f1, e1);
+        e2.fill(v2, e1, f2, e2);
 
         vor.addEdge(e1);
         vor.addEdge(e2);
@@ -116,68 +115,68 @@ public class Voronoi {
             VorCell f2 = vor.new VorCell(p2, e12);
             VorCell f3 = vor.new VorCell(p3, e22);
 
-            e11.fill(
-                    new Segment(b1.findUpLeftPoint(bound), b1
-                            .findDownRightPoint(bound)), null, e12, f1, null);
-            e12.fill(
-                    new Segment(b1.findUpLeftPoint(bound), b1
-                            .findDownRightPoint(bound)), null, e11, f2, null);
-            e21.fill(
-                    new Segment(b3.findUpLeftPoint(bound), b3
-                            .findDownRightPoint(bound)), null, e22, f2, null);
-            e22.fill(
-                    new Segment(b3.findUpLeftPoint(bound), b3
-                            .findDownRightPoint(bound)), null, e21, f3, null);
+            Vert v1 = vor.new Vert(b1.findDownRightPoint(bound), e11);
+            Vert v2 = vor.new Vert(b1.findUpLeftPoint(bound), e12);
+            Vert v3 = vor.new Vert(b3.findDownRightPoint(bound), e21);
+            Vert v4 = vor.new Vert(b3.findUpLeftPoint(bound), e22);
+
+            e11.fill(v1, e12, f1, e11);
+            e12.fill(v2, e11, f2, e12);
+            e21.fill(v3, e22, f2, e21);
+            e22.fill(v4, e21, f3, e22);
 
             vor.addEdge(e11);
             vor.addEdge(e12);
             vor.addEdge(e21);
             vor.addEdge(e22);
 
-            return vor;
+        } else {    // inter != null
+
+            VorEdge e11 = vor.new VorEdge();
+            VorEdge e12 = vor.new VorEdge();
+            VorEdge e21 = vor.new VorEdge();
+            VorEdge e22 = vor.new VorEdge();
+            VorEdge e31 = vor.new VorEdge();
+            VorEdge e32 = vor.new VorEdge();
+
+            VorCell f1 = vor.new VorCell(p1, e11);
+            VorCell f2 = vor.new VorCell(p2, e22);
+            VorCell f3 = vor.new VorCell(p3, e31);
+
+            // the three points bounding the bisectors in the rectangle
+            Point q1, q2, q3;
+            q1 = b1.findUpLeftPoint(bound);
+            if (l1.findSide(p3) == l1.findSide(q1)) {
+                q1 = b1.findDownRightPoint(bound);
+            }
+            q2 = b2.findUpLeftPoint(bound);
+            if (l2.findSide(p2) == l2.findSide(q2)) {
+                q2 = b2.findDownRightPoint(bound);
+            }
+            q3 = b3.findUpLeftPoint(bound);
+            if (l3.findSide(p1) == l3.findSide(q3)) {
+                q3 = b3.findDownRightPoint(bound);
+            }
+
+            Vert vInter = vor.new Vert(inter, e11);
+            Vert v1 = vor.new Vert(q1, e11);
+            Vert v2 = vor.new Vert(q2, e32);
+            Vert v3 = vor.new Vert(q3, e22);
+
+            e11.fill(v1, e21, f1, e12);
+            e12.fill(vInter, e32, f1, e11);
+            e21.fill(vInter, e11, f2, e22);
+            e22.fill(v3, e31, f2, e21);
+            e31.fill(vInter, e22, f3, e32);
+            e32.fill(v2, e12, f3, e31);
+
+            vor.addEdge(e11);
+            vor.addEdge(e12);
+            vor.addEdge(e21);
+            vor.addEdge(e22);
+            vor.addEdge(e31);
+            vor.addEdge(e32);
         }
-
-        // the three points bounding the bisectors in the rectangle
-        Point q1, q2, q3;
-        q1 = b1.findUpLeftPoint(bound);
-        if (l1.findSide(p3) == l1.findSide(q1)) {
-            q1 = b1.findDownRightPoint(bound);
-        }
-        q2 = b2.findUpLeftPoint(bound);
-        if (l2.findSide(p2) == l2.findSide(q2)) {
-            q2 = b2.findDownRightPoint(bound);
-        }
-        q3 = b3.findUpLeftPoint(bound);
-        if (l3.findSide(p1) == l3.findSide(q3)) {
-            q3 = b3.findDownRightPoint(bound);
-        }
-
-        VorEdge e11 = vor.new VorEdge();
-        VorEdge e12 = vor.new VorEdge();
-        VorEdge e21 = vor.new VorEdge();
-        VorEdge e22 = vor.new VorEdge();
-        VorEdge e31 = vor.new VorEdge();
-        VorEdge e32 = vor.new VorEdge();
-
-        VorCell f1 = vor.new VorCell(p1, e11);
-        VorCell f2 = vor.new VorCell(p2, e21);
-        VorCell f3 = vor.new VorCell(p3, e31);
-
-        Vert v = vor.new Vert(inter, e11);
-
-        e11.fill(new Segment(q1, inter), null, e21, f1, e12);
-        e12.fill(new Segment(inter, q3), v, e32, f1, null);
-        e21.fill(new Segment(inter, q1), v, e11, f2, null);
-        e22.fill(new Segment(q2, inter), null, e31, f2, e21);
-        e31.fill(new Segment(inter, q2), v, e22, f3, null);
-        e32.fill(new Segment(q3, inter), null, e12, f3, e31);
-
-        vor.addEdge(e11);
-        vor.addEdge(e12);
-        vor.addEdge(e21);
-        vor.addEdge(e22);
-        vor.addEdge(e31);
-        vor.addEdge(e32);
 
         return vor;
     }

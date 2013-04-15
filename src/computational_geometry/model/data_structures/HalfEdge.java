@@ -39,20 +39,20 @@ public class HalfEdge {
 
     public class Edge {
         public boolean isDrawn; // TODO try to remove this field
-        protected Vert vert;
+        protected Vert origin;
         protected Edge twin;
         protected Face face;
         protected Edge next;
 
-        public void fill(Vert vert, Edge twin, Face face, Edge next) {
-            this.vert = vert;
+        public void fill(Vert origin, Edge twin, Face face, Edge next) {
+            this.origin = origin;
             this.twin = twin;
             this.face = face;
             this.next = next;
         }
 
-        public Vert getVert() {
-            return vert;
+        public Vert getOrigin() {
+            return origin;
         }
 
         public Edge getTwin() {

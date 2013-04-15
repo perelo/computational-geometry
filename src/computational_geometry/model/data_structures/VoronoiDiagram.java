@@ -18,24 +18,24 @@ public class VoronoiDiagram extends HalfEdge {
         protected Segment s;
 
         @Override
-        public void fill(Vert vert, Edge twin, Face face, Edge next) {
+        public void fill(Vert origin, Edge twin, Face face, Edge next) {
             if (!(twin instanceof VorEdge) || !(face instanceof VorCell)
                     || !(next instanceof VorEdge)) {
                 throw new IllegalArgumentException(
                         "VorEdge must be filled with VorEdges and VorCell");
             }
-            super.fill(vert, twin, face, next);
+            super.fill(origin, twin, face, next);
         }
 
-        public void fill(Segment s, Vert vert, VorEdge twin, VorCell cell,
-                VorEdge next) {
-            super.fill(vert, twin, face, next);
-            this.s = s;
-        }
-
-        public Segment getSeg() {
-            return s;
-        }
+//        public void fill(Segment s, Vert vert, VorEdge twin, VorCell cell,
+//                VorEdge next) {
+//            super.fill(vert, twin, face, next);
+//            this.s = s;
+//        }
+//
+//        public Segment getSeg() {
+//            return s;
+//        }
     }
 
     public class VorCell extends HalfEdge.Face {

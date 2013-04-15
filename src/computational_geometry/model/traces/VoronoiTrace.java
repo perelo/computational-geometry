@@ -3,6 +3,7 @@ package computational_geometry.model.traces;
 import java.awt.Graphics;
 import java.util.Iterator;
 
+import computational_geometry.model.beans.Segment;
 import computational_geometry.model.data_structures.HalfEdge.Edge;
 import computational_geometry.model.data_structures.VoronoiDiagram;
 import computational_geometry.model.data_structures.VoronoiDiagram.VorEdge;
@@ -23,8 +24,9 @@ public class VoronoiTrace extends SimpleAlgoResult {
         Iterator<Edge> it = vor.getEdgeIterator();
         while (it.hasNext()) {
             VorEdge e = (VorEdge) it.next();
-            if (e.getSeg() != null && e.getTwin().isDrawn == false) {
-                SwingDrawer.getInstance(g).drawSegment(e.getSeg());
+            if (e.getTwin().isDrawn == false) {
+                Segment s = new Segment(e.getOrigin().getPoint(), e.getTwin().getOrigin().getPoint());
+                SwingDrawer.getInstance(g).drawSegment(s);
                 e.isDrawn = true;
             }
         }
