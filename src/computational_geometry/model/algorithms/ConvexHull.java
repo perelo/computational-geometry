@@ -11,6 +11,7 @@ import computational_geometry.model.beans.Diagonal;
 import computational_geometry.model.beans.Point;
 import computational_geometry.model.beans.Polygon;
 import computational_geometry.model.core.Utils;
+import computational_geometry.model.data_structures.CircularList;
 import computational_geometry.model.data_structures.LinkNode;
 import computational_geometry.model.traces.HullResult;
 
@@ -139,6 +140,17 @@ public class ConvexHull {
         //        polygon.addDiagonal(new Diagonal(headOfStack, stackEnvelop.pop().getValue()));
 
         return trace;
+    }
+
+    /**
+     * Compute the convex hull of a given set of point
+     * using the divide and conquer paradigm
+     * @param points
+     * @return The set of points that are in the convex hull - in counter-clockwise order
+     */
+    public static HullResult ConvexHullDivideAndConquer(CircularList<Point> points) {
+        // TODO
+        return new HullResult();
     }
 
 }

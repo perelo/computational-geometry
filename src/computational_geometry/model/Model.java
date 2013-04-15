@@ -49,6 +49,13 @@ public class Model {
         private static Map<String, GraphAlgorithm> createScatterplotAlgorithms() {
             Map<String, GraphAlgorithm> algorithms = new HashMap<String, GraphAlgorithm>();
 
+            algorithms.put("Convex Hull (divide and conquer)", new GraphAlgorithm() {
+                @Override
+                public void run(Graph graph) {
+                    trace = ConvexHull.ConvexHullDivideAndConquer(graph.getPoints());
+                }
+            });
+
             algorithms.put("Voronoi", new GraphAlgorithm() {
                 @Override
                 public void run(Graph graph) {
