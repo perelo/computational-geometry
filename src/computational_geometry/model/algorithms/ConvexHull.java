@@ -10,6 +10,7 @@ import java.util.Stack;
 import computational_geometry.model.beans.Diagonal;
 import computational_geometry.model.beans.Point;
 import computational_geometry.model.beans.Polygon;
+import computational_geometry.model.core.PointComparatorX;
 import computational_geometry.model.core.Utils;
 import computational_geometry.model.data_structures.CircularList;
 import computational_geometry.model.data_structures.LinkNode;
@@ -149,9 +150,97 @@ public class ConvexHull {
      * @param points
      * @return The set of points that are in the convex hull - in counter-clockwise order
      */
-    public static HullResult ConvexHullDivideAndConquer(CircularList<Point> points) {
-        // TODO
-        return new HullResult();
+    public static HullResult ConvexHullDivideAndConquer(List<Point> points) {
+        HullResult res = new HullResult();
+        List<Point> sortedList = new ArrayList<Point>(points);
+        Collections.sort(sortedList, new PointComparatorX());
+        res.setHull(hull(sortedList));
+        return res;
+    }
+
+    /**
+     * Compute the convex hull of a given set of points
+     * we assume that the points are sorted by their x coordinate
+     * @param points
+     * @return The points belonging to the hull ordered counter-clockwise
+     */
+    public static LinkNode<Point> hull(List<Point> points) {
+        LinkNode<Point> resultNode = null;
+        if (points.size() < 3) {
+            CircularList<Point> list = new CircularList<Point>();
+            if (points.size() >= 1) {
+                list.addFirst(points.get(0));
+                resultNode = list.getNode(0);
+            }
+            if (points.size() >= 2) {
+                list.addFirst(points.get(1));
+            }
+        } else if (points.size() == 3) {
+            CircularList<Point> list = new CircularList<Point>();
+            Point p, q, r;
+            p = points.get(0);
+            q = points.get(1);
+            r = points.get(2);
+            if (Utils.orientation(p, q, r) < 0) {
+                list.addFirst(r);
+                list.addFirst(q);
+                list.addFirst(p);
+            } else {
+                list.addFirst(p);
+                list.addFirst(q);
+                list.addFirst(r);
+            }
+            resultNode = list.getNode(0);
+        } else {
+            int splitIndex = points.size() / 2;
+            LinkNode<Point> hull1 = hull(points.subList(0, splitIndex));
+            LinkNode<Point> hull2 = hull(points.subList(splitIndex, points.size()));
+            resultNode = unionHull(hull1, hull2);
+        }
+        return resultNode;
+    }
+
+    public static LinkNode<Point> unionHull(LinkNode<Point> hull1, LinkNode<Point> hull2) {
+        LinkNode<Point> tmp, u, v, uh, vh, ul, vl;
+        tmp = u = hull1;
+        do {
+            if (tmp.getValue().x > u.getValue().x)
+                u = tmp;
+            tmp = tmp.getNext();
+        } while (!tmp.getValue().equals(hull1.getValue()));
+        tmp = v = hull2;
+        do {
+            if (tmp.getValue().x < v.getValue().x)
+                v = tmp;
+            tmp = tmp.getNext();
+        } while (!tmp.getValue().equals(hull2.getValue()));
+
+        uh = u;
+        vh = v;
+        ul = u;
+        vl = v;
+        boolean b;
+        while ((b = Utils.orientation(vh.getPrev().getValue(), vh.getValue(), uh.getValue()) > 0) ||
+               Utils.orientation(uh.getValue(), uh.getNext().getValue(), vh.getValue()) > 0) {
+            if (b) {
+                vh = vh.getPrev();
+            } else {
+                uh = uh.getNext();
+            }
+        }
+        while ((b = Utils.orientation(vl.getValue(), vl.getNext().getValue(), ul.getValue()) > 0) ||
+               Utils.orientation(ul.getValue(), ul.getPrev().getValue(), vl.getValue()) < 0) {
+            if (b) {
+                vl = vl.getNext();
+            } else {
+                ul = ul.getPrev();
+            }
+        }
+        uh.setPrev(vh);
+        vh.setNext(uh);
+        ul.setNext(vl);
+        vl.setPrev(ul);
+        return uh;
     }
 
 }

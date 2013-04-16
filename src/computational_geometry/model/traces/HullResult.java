@@ -7,6 +7,7 @@ import java.util.List;
 
 import computational_geometry.model.beans.Point;
 import computational_geometry.model.beans.Segment;
+import computational_geometry.model.data_structures.LinkNode;
 import computational_geometry.views.SwingDrawer;
 
 /**
@@ -17,29 +18,30 @@ import computational_geometry.views.SwingDrawer;
 public class HullResult extends SimpleAlgoResult {
 
     private List<Segment> segments; // TODO remove, but check TODO on polygonConvexHull b4
-    private List<Point> points;
+    private LinkNode<Point> hull;
 
     @Override
     public void drawFullResult(Graphics g) {
         Color c = g.getColor();
         g.setColor(Color.GREEN);
         Drawer drawer = SwingDrawer.getInstance(g);
-        if (segments != null) {
+        if (segments.size() != 0) {
             for (Segment s : segments) {
                 drawer.drawSegment(s);
             }
         }
-        else if (points != null) {
-            for (int i = 1; i < points.size(); ++i) {
-                drawer.drawSegment(new Segment(points.get(i-1), points.get(i)));
-            }
+        else if (hull != null) {
+            LinkNode<Point> node = hull;
+            do {
+                drawer.drawSegment(new Segment(node.getValue(), node.getNext().getValue()));
+                node = node.getNext();
+            } while (!node.getValue().equals(hull.getValue()));
         }
         g.setColor(c);
     }
 
     public HullResult() {
         this.segments = new ArrayList<Segment>();
-        this.points = new ArrayList<Point>();
     }
 
     public void addSegment(Segment s) {
@@ -53,17 +55,13 @@ public class HullResult extends SimpleAlgoResult {
     public List<Segment> getSegments() {
         return segments;
     }
-    
-    public void addPoint(Point p) {
-        points.add(p);
+
+    public LinkNode<Point> getHull() {
+        return hull;
     }
-    
-    public void removePoint(Point p) {
-        points.remove(p);
-    }
-    
-    public List<Point> getPoints() {
-        return points;
+
+    public void setHull(LinkNode<Point> hull) {
+        this.hull = hull;
     }
 
 }
