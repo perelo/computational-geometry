@@ -59,7 +59,7 @@ public class Line {
     public Point findUpperPoint(Rectangle r) {
         double x, y, a;
         a = slope();
-        if (a < 0) {                // up or right
+        if (a <= 0) {                // up or right
             if (Math.abs(a) > 1) {  // up
                 y = r.getY();
                 x = findX(y);
@@ -87,7 +87,7 @@ public class Line {
     public Point findLowerPoint(Rectangle r) {
         double x, y, a;
         a = slope();
-        if (a < 0) {                // down or left
+        if (a <= 0) {                // down or left
             if (Math.abs(a) > 1) {  // down
                 y = r.getHeight() + r.getY();
                 x = findX(y);
