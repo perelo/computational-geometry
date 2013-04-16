@@ -328,8 +328,9 @@ public class Voronoi {
                 eCl = cl.getEdge();
                 lastDivEdge = newEdge;
                 lastDivPoint = interCl;
-            } else {
-                System.err.println("whut ? shouldnt have happened");
+            } else {    // interCl = interCr
+                // TODO : handle this special case :
+                // we pass through both cells in the same time
             }
             divPoints.add(lastDivPoint);
             interCr = interCl = null;
