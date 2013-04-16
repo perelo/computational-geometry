@@ -1,7 +1,10 @@
 package computational_geometry.model.traces;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +22,8 @@ public class HullResult extends SimpleAlgoResult {
 
     private List<Segment> segments; // TODO remove, but check TODO on polygonConvexHull b4
     private LinkNode<Point> hull;
+    private Segment lowerTangent;
+    private Segment upperTangent;
 
     @Override
     public void drawFullResult(Graphics g) {
@@ -36,6 +41,17 @@ public class HullResult extends SimpleAlgoResult {
                 drawer.drawSegment(new Segment(node.getValue(), node.getNext().getValue()));
                 node = node.getNext();
             } while (!node.getValue().equals(hull.getValue()));
+            g.setColor(Color.RED);
+            Graphics2D g2 = (Graphics2D) g;
+            Stroke s = g2.getStroke();
+            g2.setStroke(new BasicStroke(2));
+            if (lowerTangent != null) {
+                drawer.drawSegment(lowerTangent);
+            }
+            if (upperTangent != null) {
+                drawer.drawSegment(upperTangent);
+            }
+            g2.setStroke(s);
         }
         g.setColor(c);
     }
@@ -62,6 +78,26 @@ public class HullResult extends SimpleAlgoResult {
 
     public void setHull(LinkNode<Point> hull) {
         this.hull = hull;
+    }
+
+    public Segment getLowerTangent() {
+        return lowerTangent;
+    }
+
+    public void setLowerTangent(Segment lowerTangent) {
+        this.lowerTangent = lowerTangent;
+    }
+
+    public Segment getUpperTangent() {
+        return upperTangent;
+    }
+
+    public void setUpperTangent(Segment upperTangent) {
+        this.upperTangent = upperTangent;
+    }
+
+    public void setSegments(List<Segment> segments) {
+        this.segments = segments;
     }
 
 }

@@ -10,6 +10,7 @@ import java.util.Stack;
 import computational_geometry.model.beans.Diagonal;
 import computational_geometry.model.beans.Point;
 import computational_geometry.model.beans.Polygon;
+import computational_geometry.model.beans.Segment;
 import computational_geometry.model.core.PointComparatorX;
 import computational_geometry.model.core.Utils;
 import computational_geometry.model.data_structures.CircularList;
@@ -151,11 +152,9 @@ public class ConvexHull {
      * @return The set of points that are in the convex hull - in counter-clockwise order
      */
     public static HullResult ConvexHullDivideAndConquer(List<Point> points) {
-        HullResult res = new HullResult();
         List<Point> sortedList = new ArrayList<Point>(points);
         Collections.sort(sortedList, new PointComparatorX());
-        res.setHull(hull(sortedList));
-        return res;
+        return hull(sortedList);
     }
 
     /**
@@ -164,13 +163,13 @@ public class ConvexHull {
      * @param points
      * @return The points belonging to the hull ordered counter-clockwise
      */
-    public static LinkNode<Point> hull(List<Point> points) {
-        LinkNode<Point> resultNode = null;
+    public static HullResult hull(List<Point> points) {
+        HullResult res = new HullResult();
         if (points.size() < 3) {
             CircularList<Point> list = new CircularList<Point>();
             if (points.size() >= 1) {
                 list.addFirst(points.get(0));
-                resultNode = list.getNode(0);
+                res.setHull(list.getNode(0));
             }
             if (points.size() >= 2) {
                 list.addFirst(points.get(1));
@@ -190,17 +189,17 @@ public class ConvexHull {
                 list.addFirst(q);
                 list.addFirst(r);
             }
-            resultNode = list.getNode(0);
+            res.setHull(list.getNode(0));
         } else {
             int splitIndex = points.size() / 2;
-            LinkNode<Point> hull1 = hull(points.subList(0, splitIndex));
-            LinkNode<Point> hull2 = hull(points.subList(splitIndex, points.size()));
-            resultNode = unionHull(hull1, hull2);
+            LinkNode<Point> hull1 = hull(points.subList(0, splitIndex)).getHull();
+            LinkNode<Point> hull2 = hull(points.subList(splitIndex, points.size())).getHull();
+            res = unionHull(hull1, hull2);
         }
-        return resultNode;
+        return res;
     }
 
-    public static LinkNode<Point> unionHull(LinkNode<Point> hull1, LinkNode<Point> hull2) {
+    public static HullResult unionHull(LinkNode<Point> hull1, LinkNode<Point> hull2) {
         LinkNode<Point> tmp, u, v, uh, vh, ul, vl;
         tmp = u = hull1;
         do {
@@ -240,7 +239,11 @@ public class ConvexHull {
         vh.setNext(uh);
         ul.setNext(vl);
         vl.setPrev(ul);
-        return uh;
+        HullResult res = new HullResult();
+        res.setHull(uh);
+        res.setLowerTangent(new Segment(ul.getValue(), vl.getValue()));
+        res.setUpperTangent(new Segment(uh.getValue(), vh.getValue()));
+        return res;
     }
 
 }
