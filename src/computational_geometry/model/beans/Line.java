@@ -52,19 +52,29 @@ public class Line {
     }
 
     /**
-     * Find the upper point of this line bounded by a given rectangle 
+     * Find the upper point of this line bounded by a given rectangle
      * @param r
      * @return
      */
-    public Point findUpLeftPoint(Rectangle r) {
+    public Point findUpperPoint(Rectangle r) {
         double x, y, a;
         a = slope();
-        if (Math.abs(a) > 1) {
-            y = r.getY();
-            x = findX(y);
-        } else {
-            x = r.getX();
-            y = findY(x);
+        if (a < 0) {                // up or right
+            if (Math.abs(a) > 1) {  // up
+                y = r.getY();
+                x = findX(y);
+            } else {                // right
+                x = r.getWidth() + r.getX();
+                y = findY(x);
+            }
+        } else {                    // up or left
+            if (Math.abs(a) > 1) {  // up
+                y = r.getY();
+                x = findX(y);
+            } else {                // left
+                x = r.getX();
+                y = findY(x);
+            }
         }
         return new Point((int) x, (int) y);
     }
@@ -74,15 +84,25 @@ public class Line {
      * @param r
      * @return
      */
-    public Point findDownRightPoint(Rectangle r) {
+    public Point findLowerPoint(Rectangle r) {
         double x, y, a;
         a = slope();
-        if (Math.abs(a) > 1) {
-            y = r.getHeight();
-            x = findX(y);
-        } else {
-            x = r.getWidth();
-            y = findY(x);
+        if (a < 0) {                // down or left
+            if (Math.abs(a) > 1) {  // down
+                y = r.getHeight() + r.getY();
+                x = findX(y);
+            } else {                // left
+                x = r.getX();
+                y = findY(x);
+            }
+        } else {                    // down or right
+            if (Math.abs(a) > 1) {  // down
+                y = r.getHeight() + r.getY();
+                x = findX(y);
+            } else {                // right
+                x = r.getWidth() + r.getX();
+                y = findY(x);
+            }
         }
         return new Point((int) x, (int) y);
     }
