@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import computational_geometry.model.beans.Point;
+import computational_geometry.model.beans.Segment;
 
 /**
  * Half-Edge data structure
@@ -46,6 +47,10 @@ public class HalfEdge {
         protected Face face;
         protected Edge next;
 
+        public String toString() {
+            return getSegment().toString();
+        }
+
         public void fill(Vert origin, Edge twin, Face face, Edge next) {
             this.origin = origin;
             this.twin = twin;
@@ -53,8 +58,16 @@ public class HalfEdge {
             this.next = next;
         }
 
+        public Segment getSegment() {
+            return new Segment(origin.p, twin.origin.p);
+        }
+
         public Vert getOrigin() {
             return origin;
+        }
+
+        public void setOrigin(Vert origin) {
+            this.origin = origin;
         }
 
         public Edge getTwin() {
@@ -67,6 +80,10 @@ public class HalfEdge {
 
         public Edge getNext() {
             return next;
+        }
+
+        public void setNext(Edge next) {
+            this.next = next;
         }
     }
 

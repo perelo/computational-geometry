@@ -9,10 +9,10 @@ import computational_geometry.model.beans.Line;
 import computational_geometry.model.beans.Point;
 import computational_geometry.model.core.Lines;
 import computational_geometry.model.core.PointComparatorX;
+import computational_geometry.model.data_structures.HalfEdge.Edge;
 import computational_geometry.model.data_structures.HalfEdge.Vert;
 import computational_geometry.model.data_structures.VoronoiDiagram;
 import computational_geometry.model.data_structures.VoronoiDiagram.VorCell;
-import computational_geometry.model.data_structures.VoronoiDiagram.VorEdge;
 import computational_geometry.model.traces.VoronoiTrace;
 
 public class Voronoi {
@@ -66,14 +66,14 @@ public class Voronoi {
         Point p2 = points.get(1);
         Line bisector = Lines.findBisector(p1, p2);
 
-        VorEdge e1 = vor.new VorEdge();
-        VorEdge e2 = vor.new VorEdge();
+        Edge e1 = vor.new Edge();
+        Edge e2 = vor.new Edge();
 
         VorCell c1 = vor.new VorCell(p1, e1);
         VorCell c2 = vor.new VorCell(p2, e2);
 
-        Vert v1 = vor.new Vert(bisector.findDownRightPoint(bound), e1);
-        Vert v2 = vor.new Vert(bisector.findUpLeftPoint(bound), e2);
+        Vert v1 = vor.new Vert(bisector.findLowerPoint(bound), e1);
+        Vert v2 = vor.new Vert(bisector.findUpperPoint(bound), e2);
 
         e1.fill(v1, e2, c1, e1);
         e2.fill(v2, e1, c2, e2);
@@ -110,19 +110,19 @@ public class Voronoi {
         if (inter == null) {
             // two bisectors,
             // assuming that point is sorted, it's bisector(p1, p2) and bisector(p2, p3)
-            VorEdge e11 = vor.new VorEdge();
-            VorEdge e12 = vor.new VorEdge();
-            VorEdge e21 = vor.new VorEdge();
-            VorEdge e22 = vor.new VorEdge();
+            Edge e11 = vor.new Edge();
+            Edge e12 = vor.new Edge();
+            Edge e21 = vor.new Edge();
+            Edge e22 = vor.new Edge();
 
             c1 = vor.new VorCell(p1, e11);
             c2 = vor.new VorCell(p2, e12);
             c3 = vor.new VorCell(p3, e22);
 
-            Vert v1 = vor.new Vert(b1.findDownRightPoint(bound), e11);
-            Vert v2 = vor.new Vert(b1.findUpLeftPoint(bound), e12);
-            Vert v3 = vor.new Vert(b3.findDownRightPoint(bound), e21);
-            Vert v4 = vor.new Vert(b3.findUpLeftPoint(bound), e22);
+            Vert v1 = vor.new Vert(b1.findLowerPoint(bound), e11);
+            Vert v2 = vor.new Vert(b1.findUpperPoint(bound), e12);
+            Vert v3 = vor.new Vert(b3.findLowerPoint(bound), e21);
+            Vert v4 = vor.new Vert(b3.findUpperPoint(bound), e22);
 
             e11.fill(v1, e12, c1, e11);
             e12.fill(v2, e11, c2, e12);
@@ -136,12 +136,12 @@ public class Voronoi {
 
         } else {    // inter != null
 
-            VorEdge e11 = vor.new VorEdge();
-            VorEdge e12 = vor.new VorEdge();
-            VorEdge e21 = vor.new VorEdge();
-            VorEdge e22 = vor.new VorEdge();
-            VorEdge e31 = vor.new VorEdge();
-            VorEdge e32 = vor.new VorEdge();
+            Edge e11 = vor.new Edge();
+            Edge e12 = vor.new Edge();
+            Edge e21 = vor.new Edge();
+            Edge e22 = vor.new Edge();
+            Edge e31 = vor.new Edge();
+            Edge e32 = vor.new Edge();
 
             c1 = vor.new VorCell(p1, e11);
             c2 = vor.new VorCell(p2, e22);
@@ -149,17 +149,17 @@ public class Voronoi {
 
             // the three points bounding the bisectors in the rectangle
             Point q1, q2, q3;
-            q1 = b1.findUpLeftPoint(bound);
+            q1 = b1.findUpperPoint(bound);
             if (l1.findSide(p3) == l1.findSide(q1)) {
-                q1 = b1.findDownRightPoint(bound);
+                q1 = b1.findLowerPoint(bound);
             }
-            q2 = b2.findUpLeftPoint(bound);
+            q2 = b2.findUpperPoint(bound);
             if (l2.findSide(p2) == l2.findSide(q2)) {
-                q2 = b2.findDownRightPoint(bound);
+                q2 = b2.findLowerPoint(bound);
             }
-            q3 = b3.findUpLeftPoint(bound);
+            q3 = b3.findUpperPoint(bound);
             if (l3.findSide(p1) == l3.findSide(q3)) {
-                q3 = b3.findDownRightPoint(bound);
+                q3 = b3.findLowerPoint(bound);
             }
 
             Vert vInter = vor.new Vert(inter, e11);
