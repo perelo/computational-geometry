@@ -106,4 +106,17 @@ public class Utils {
         return (p1.x - p2.x) * (p3.y - p2.y) - (p3.x - p2.x) * (p1.y - p2.y);
     }
 
+    /**
+     * Compute the orientation of three given points
+     * @param p
+     * @param q
+     * @param r
+     * @return < 0 if it's a left turn,
+     *         > 0 if it's a right turn,
+     *         = 0 if points are aligned
+     */
+    public static int orientation(Point p, Point q, Point r) {
+        return (int) Math.signum((p.x - r.x) * (q.y - r.y) - (p.y - r.y) * (q.x - r.x));
+    }
+
 }
