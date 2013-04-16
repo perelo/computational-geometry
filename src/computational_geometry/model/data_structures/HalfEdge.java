@@ -14,9 +14,11 @@ import computational_geometry.model.beans.Point;
 public class HalfEdge {
 
     private List<Edge> edges;
+    private List<Face> faces;
 
     public HalfEdge() {
         edges = new ArrayList<HalfEdge.Edge>();
+        faces = new ArrayList<HalfEdge.Face>();
     }
 
     public class Vert {
@@ -97,6 +99,14 @@ public class HalfEdge {
         edges.remove(e);
     }
 
+    public void addFace(Face f) {
+        faces.add(f);
+    }
+
+    public void removeFace(Face f) {
+        faces.remove(f);
+    }
+
     /**
      * Get an iterator for edges, so we can iterate on them
      * without having the actual list and messing around with it
@@ -104,6 +114,15 @@ public class HalfEdge {
      */
     public Iterator<Edge> getEdgeIterator() {
         return edges.iterator();
+    }
+
+    /**
+     * Get an iterator for faces, so we can iterate on them
+     * without having the actual list and messing around with it
+     * @return
+     */
+    public Iterator<Face> getFaceIterator() {
+        return faces.iterator();
     }
 
 }

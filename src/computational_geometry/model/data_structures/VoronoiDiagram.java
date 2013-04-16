@@ -60,4 +60,13 @@ public class VoronoiDiagram extends HalfEdge {
         super.addEdge(e);
     }
 
+    @Override
+    public void addFace(Face f) {
+        if (!(f instanceof VorCell)) {
+            throw new IllegalArgumentException(
+                    "Can only add VorCells to VoronoiDiagram.");
+        }
+        super.addFace(f);
+    }
+
 }
