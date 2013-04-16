@@ -53,6 +53,17 @@ public class Lines {
         return isInRectangle(p, s) ? p : null;
     }
 
+    /***
+     * Find the intersection point of two segments
+     * @param s1
+     * @param s2
+     * @return The intersection of s1 and s2 if exists, null otherwise
+     */
+    public static Point findIntersection(Segment s1, Segment s2) {
+        Point p = findLine(s1.u, s1.v).findIntersection(findLine(s2.u, s2.v));
+        return (isInRectangle(p, s2) && isInRectangle(p, s2)) ? p : null;
+    }
+
     /**
      * If a point is in the rectangle represented by its diagonal (segment)
      * @param p
@@ -62,10 +73,10 @@ public class Lines {
     public static boolean isInRectangle(Point p, Segment s) {
         if (p == null || s == null)
             return false;
-        return ((s.u.x < s.v.x && p.x >= s.u.x && p.x <= s.v.x) || (s.u.x > s.v.x
-                && p.x <= s.u.x && p.x >= s.v.x))
-                && ((s.u.x < s.v.x && p.x >= s.u.x && p.x <= s.v.x) || (s.u.x > s.v.x
-                        && p.x <= s.u.x && p.x >= s.v.x));
+        return ((s.u.x < s.v.x && p.x >= s.u.x && p.x <= s.v.x) ||
+                (s.u.x > s.v.x && p.x <= s.u.x && p.x >= s.v.x))
+            && ((s.u.x < s.v.x && p.x >= s.u.x && p.x <= s.v.x) ||
+                (s.u.x > s.v.x && p.x <= s.u.x && p.x >= s.v.x));
     }
 
 }
