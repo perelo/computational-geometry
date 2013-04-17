@@ -1,5 +1,6 @@
 package computational_geometry.model.traces;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Iterator;
 
@@ -28,6 +29,14 @@ public class VoronoiTrace extends SimpleAlgoResult {
                 SwingDrawer.getInstance(g).drawSegment(s);
                 e.isDrawn = true;
             }
+        }
+        if (vor.lastDivideLine != null && vor.lastDivideLine.size() != 0) {
+            Color c = g.getColor();
+            g.setColor(Color.GREEN);
+            for (int i = 1; i < vor.lastDivideLine.size(); ++i) {
+                SwingDrawer.getInstance(g).drawSegment(new Segment(vor.lastDivideLine.get(i-1), vor.lastDivideLine.get(i)));
+            }
+            g.setColor(c);
         }
     }
 

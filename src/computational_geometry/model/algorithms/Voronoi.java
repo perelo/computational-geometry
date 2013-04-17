@@ -260,7 +260,7 @@ public class Voronoi {
             do {
                 Segment s = new Segment(eCr.getOrigin().getPoint(), eCr.getTwin().getOrigin().getPoint());
                 if ((interCr = Lines.findIntersection(ray, s)) != null) {
-                    if (interCr.isInRange(lastDivPoint)) {
+                    if (interCr.equals(lastDivPoint)) {
                         interCr = null;
                     } else {
                         break;
