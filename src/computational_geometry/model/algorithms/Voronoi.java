@@ -261,7 +261,7 @@ public class Voronoi {
             do {
                 Segment s = new Segment(eCr.getOrigin().getPoint(), eCr.getTwin().getOrigin().getPoint());
                 if (!eCr.isNew && (interCr = Lines.findIntersection(l, s)) != null) {
-                    if (interCr.y <= rayUpperBound || interCr.y <= rayUpperBound) {
+                    if (interCr.y <= rayUpperBound) {
                         interCr = null;
                     } else {
                         break;
@@ -272,8 +272,8 @@ public class Voronoi {
             // find intersection between the dividing line and the right cell bounds
             do {
                 Segment s = new Segment(eCl.getOrigin().getPoint(), eCl.getTwin().getOrigin().getPoint());
-                if (!eCr.isNew && (interCl = Lines.findIntersection(l, s)) != null) {
-                    if (interCl.y <= rayUpperBound || interCl.y <= rayUpperBound) {
+                if (!eCl.isNew && (interCl = Lines.findIntersection(l, s)) != null) {
+                    if (interCl.y <= rayUpperBound) {
                         interCl = null;
                     } else {
                         break;
@@ -303,6 +303,9 @@ public class Voronoi {
                 lastDivEdge.getTwin().setOrigin(newVert);
                 eCr.setOrigin(newVert);
                 eCr.getTwin().setNext(newEdge);
+                if (eCr.getNext().equals(eCr.getNext())) {
+                    eCr.setNext(lastDivEdge);
+                }
 
                 res.addEdge(newEdge);
                 res.addEdge(twinNewEdge);
@@ -328,6 +331,9 @@ public class Voronoi {
                 lastDivEdge.getTwin().setOrigin(newVert);
                 eCl.setNext(lastDivEdge.getTwin());
                 eCl.getTwin().setOrigin(newVert);
+                if (eCl.getTwin().getNext().equals(eCl.getTwin().getNext())) {
+                    eCl.getTwin().setNext(twinNewEdge);
+                }
 
                 res.addEdge(newEdge);
                 res.addEdge(twinNewEdge);
@@ -356,6 +362,12 @@ public class Voronoi {
                 eCl.getTwin().setOrigin(newVert);
                 eCr.setOrigin(newVert);
                 eCr.getTwin().setNext(newEdge);
+                if (eCr.getNext().equals(eCr.getNext())) {
+                    eCr.setNext(lastDivEdge);
+                }
+                if (eCl.getTwin().getNext().equals(eCl.getTwin().getNext())) {
+                    eCl.getTwin().setNext(twinNewEdge);
+                }
 
                 res.addEdge(newEdge);
                 res.addEdge(twinNewEdge);
