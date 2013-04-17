@@ -329,8 +329,31 @@ public class Voronoi {
                 lastDivEdge = newEdge;
                 lastDivPoint = interCl;
             } else {    // interCl = interCr
-                // TODO : handle this special case :
-                // we pass through both cells in the same time
+                cl = (VorCell) eCl.getTwin().getFace();
+                cr = (VorCell) eCr.getTwin().getFace();
+                l = Lines.findBisector(cl.getSite(), cr.getSite());
+                Edge newEdge = vor1.new Edge();
+                Edge twinNewEdge = vor1.new Edge();
+
+                Vert newVert = vor1.new Vert(interCl, newEdge);
+                Vert newEndDivEdge = vor1.new Vert(l.findLowerPoint(bound), twinNewEdge);
+
+                newEdge.fill(newVert, twinNewEdge, cr, eCr.getTwin().getNext());
+                twinNewEdge.fill(newEndDivEdge, newEdge, cl, eCl.getTwin());
+                lastDivEdge.getTwin().setOrigin(newVert);
+                lastDivEdge.setNext(eCr);
+                eCl.setNext(lastDivEdge.getTwin());
+                eCl.getTwin().setOrigin(newVert);
+                eCr.setOrigin(newVert);
+                eCr.getTwin().setNext(newEdge);
+
+                res.addEdge(newEdge);
+                res.addEdge(twinNewEdge);
+
+                eCl = cl.getEdge();
+                eCr = cr.getEdge();
+                lastDivEdge = newEdge;
+                lastDivPoint = interCl;
             }
             divPoints.add(lastDivPoint);
             interCr = interCl = null;
