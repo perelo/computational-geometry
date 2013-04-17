@@ -236,7 +236,9 @@ public class Voronoi {
 
         List<Point> divPoints = new ArrayList<Point>();
 
+        // the ray will be l bounded at y by rayUpperBound
         Point lastDivPoint = l.findUpperPoint(bound);
+        int rayUpperBound = Integer.MIN_VALUE;
         Edge lastDivEdge = vor1.new Edge(); // downward
         Edge twinLastDivEdge = vor1.new Edge();
 
@@ -255,12 +257,11 @@ public class Voronoi {
         Edge eCr = cr.getEdge();
         Edge eCl = cl.getEdge();
         while (!(curSeg = new Segment(cl.getSite(), cr.getSite())).equals(hullResult.getLowerTangent())) {
-            Segment ray = new Segment(lastDivPoint, l.findLowerPoint(bound));
             // find intersection between the dividing line and the right cell bounds
             do {
                 Segment s = new Segment(eCr.getOrigin().getPoint(), eCr.getTwin().getOrigin().getPoint());
-                if ((interCr = Lines.findIntersection(ray, s)) != null) {
-                    if (interCr.equals(lastDivPoint)) {
+                if (!eCr.isNew && (interCr = Lines.findIntersection(l, s)) != null) {
+                    if (interCr.y <= rayUpperBound || interCr.y <= rayUpperBound) {
                         interCr = null;
                     } else {
                         break;
@@ -271,8 +272,8 @@ public class Voronoi {
             // find intersection between the dividing line and the right cell bounds
             do {
                 Segment s = new Segment(eCl.getOrigin().getPoint(), eCl.getTwin().getOrigin().getPoint());
-                if ((interCl = Lines.findIntersection(ray, s)) != null) {
-                    if (interCl.equals(lastDivPoint)) {
+                if (!eCr.isNew && (interCl = Lines.findIntersection(l, s)) != null) {
+                    if (interCl.y <= rayUpperBound || interCl.y <= rayUpperBound) {
                         interCl = null;
                     } else {
                         break;
@@ -289,9 +290,12 @@ public class Voronoi {
 
                 Edge newEdge = vor1.new Edge();
                 Edge twinNewEdge = vor1.new Edge();
+                newEdge.isNew = true;
+                twinNewEdge.isNew = true;
 
                 Vert newVert = vor1.new Vert(interCr, newEdge);
                 Vert newEndDivEdge = vor1.new Vert(l.findLowerPoint(bound), twinNewEdge);
+                newEndDivEdge.getPoint().setInfinite(false);
 
                 newEdge.fill(newVert, twinNewEdge, cr, eCr.getTwin().getNext());
                 twinNewEdge.fill(newEndDivEdge, newEdge, cl, lastDivEdge.getTwin());
@@ -303,7 +307,7 @@ public class Voronoi {
                 res.addEdge(newEdge);
                 res.addEdge(twinNewEdge);
 
-                eCr = cr.getEdge();
+                eCr = newEdge.getNext();
                 lastDivEdge = newEdge;
                 lastDivPoint = interCr;
             } else if (interCr == null || (interCl != null && interCl.y < interCr.y)) {
@@ -311,9 +315,12 @@ public class Voronoi {
                 l = Lines.findBisector(cl.getSite(), cr.getSite());
                 Edge newEdge = vor1.new Edge();
                 Edge twinNewEdge = vor1.new Edge();
+                newEdge.isNew = true;
+                twinNewEdge.isNew = true;
 
                 Vert newVert = vor1.new Vert(interCl, newEdge);
                 Vert newEndDivEdge = vor1.new Vert(l.findLowerPoint(bound), twinNewEdge);
+                newEndDivEdge.getPoint().setInfinite(false);
 
                 newEdge.fill(newVert, twinNewEdge, cl, lastDivEdge.getNext());
                 twinNewEdge.fill(newEndDivEdge, newEdge, cl, eCl.getTwin());
@@ -325,7 +332,7 @@ public class Voronoi {
                 res.addEdge(newEdge);
                 res.addEdge(twinNewEdge);
 
-                eCl = cl.getEdge();
+                eCl = eCl.getTwin();
                 lastDivEdge = newEdge;
                 lastDivPoint = interCl;
             } else {    // interCl = interCr
@@ -334,9 +341,12 @@ public class Voronoi {
                 l = Lines.findBisector(cl.getSite(), cr.getSite());
                 Edge newEdge = vor1.new Edge();
                 Edge twinNewEdge = vor1.new Edge();
+                newEdge.isNew = true;
+                twinNewEdge.isNew = true;
 
                 Vert newVert = vor1.new Vert(interCl, newEdge);
                 Vert newEndDivEdge = vor1.new Vert(l.findLowerPoint(bound), twinNewEdge);
+                newEndDivEdge.getPoint().setInfinite(false);
 
                 newEdge.fill(newVert, twinNewEdge, cr, eCr.getTwin().getNext());
                 twinNewEdge.fill(newEndDivEdge, newEdge, cl, eCl.getTwin());
@@ -356,10 +366,13 @@ public class Voronoi {
                 lastDivPoint = interCl;
             }
             divPoints.add(lastDivPoint);
+            rayUpperBound = lastDivPoint.y;
             interCr = interCl = null;
         }
         l = Lines.findBisector(curSeg.u, curSeg.v);
-        divPoints.add(l.findLowerPoint(bound));
+        Point endOfDiv = l.findLowerPoint(bound);
+        endOfDiv.setInfinite(false);
+        divPoints.add(endOfDiv);
         res.lastDivideLine = divPoints;
 
         itFace = vor1.getFaceIterator();
