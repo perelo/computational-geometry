@@ -73,6 +73,14 @@ public class Lines {
     public static boolean isInRectangle(Point p, Segment s) {
         if (p == null || s == null)
             return false;
+        if (s.v.isInfinite()) {
+            return (s.u.x < s.v.x && p.x >= s.u.x) ||
+                   (s.u.x > s.v.x && p.x <= s.u.x);
+        }
+        if (s.u.isInfinite()) {
+            return (s.u.x < s.v.x && p.x <= s.v.x) ||
+                   (s.u.x > s.v.x && p.x >= s.v.x);
+        }
         return ((s.u.x < s.v.x && p.x >= s.u.x && p.x <= s.v.x) ||
                 (s.u.x > s.v.x && p.x <= s.u.x && p.x >= s.v.x))
             && ((s.u.x < s.v.x && p.x >= s.u.x && p.x <= s.v.x) ||
