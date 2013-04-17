@@ -125,46 +125,47 @@ public class SwingDrawer implements Drawer {
         if (s == null) {
             throw new IllegalArgumentException("segment is null");
         }
-        if (!s.u.isInfinite() && !s.v.isInfinite()) {
-            g.drawLine(s.u.x, s.u.y, s.v.x, s.v.y);
-            return;
-        }
-        double x1, x2, y1, y2, a;
-        x1 = s.u.x;
-        x2 = s.v.x;
-        y1 = s.u.y;
-        y2 = s.v.y;
-        if (s.u.x == s.v.x) { // a would be infinite
-            if (s.u.isInfinite()) {
-                y1 = s.v.y < s.u.y ? g.getClipBounds().height : 0;
-            }
-            if (s.v.isInfinite()) {
-                y2 = s.u.y < s.v.y ? g.getClipBounds().height : 0;
-            }
-        } else {
-            a = ((double) (s.v.y - s.u.y) / (s.v.x - s.u.x));
-            // adapt dimension reference so we don't draw to infinite
-            if (Math.abs(a) > 1) {
-                if (s.u.isInfinite()) {
-                    y1 = s.v.y < s.u.y ? g.getClipBounds().height : 0;
-                    x1 = (y1 - s.u.y + s.u.x * a) / a;
-                }
-                if (s.v.isInfinite()) {
-                    y2 = s.u.y < s.v.y ? g.getClipBounds().height : 0;
-                    x2 = (y2 - s.u.y + s.u.x * a) / a;
-                }
-            } else {
-                if (s.u.isInfinite()) {
-                    x1 = s.v.x < s.u.x ? g.getClipBounds().width : 0;
-                    y1 = a * (x1 - s.u.x) + s.u.y;
-                }
-                if (s.v.isInfinite()) {
-                    x2 = s.u.x < s.v.x ? g.getClipBounds().width : 0;
-                    y2 = a * (x2 - s.u.x) + s.u.y;
-                }
-            }
-        }
-        g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+        g.drawLine(s.u.x, s.u.y, s.v.x, s.v.y);
+//        if (!s.u.isInfinite() && !s.v.isInfinite()) {
+//            g.drawLine(s.u.x, s.u.y, s.v.x, s.v.y);
+//            return;
+//        }
+//        double x1, x2, y1, y2, a;
+//        x1 = s.u.x;
+//        x2 = s.v.x;
+//        y1 = s.u.y;
+//        y2 = s.v.y;
+//        if (s.u.x == s.v.x) { // a would be infinite
+//            if (s.u.isInfinite()) {
+//                y1 = s.v.y < s.u.y ? g.getClipBounds().height : 0;
+//            }
+//            if (s.v.isInfinite()) {
+//                y2 = s.u.y < s.v.y ? g.getClipBounds().height : 0;
+//            }
+//        } else {
+//            a = ((double) (s.v.y - s.u.y) / (s.v.x - s.u.x));
+//            // adapt dimension reference so we don't draw to infinite
+//            if (Math.abs(a) > 1) {
+//                if (s.u.isInfinite()) {
+//                    y1 = s.v.y < s.u.y ? g.getClipBounds().height : 0;
+//                    x1 = (y1 - s.u.y + s.u.x * a) / a;
+//                }
+//                if (s.v.isInfinite()) {
+//                    y2 = s.u.y < s.v.y ? g.getClipBounds().height : 0;
+//                    x2 = (y2 - s.u.y + s.u.x * a) / a;
+//                }
+//            } else {
+//                if (s.u.isInfinite()) {
+//                    x1 = s.v.x < s.u.x ? g.getClipBounds().width : 0;
+//                    y1 = a * (x1 - s.u.x) + s.u.y;
+//                }
+//                if (s.v.isInfinite()) {
+//                    x2 = s.u.x < s.v.x ? g.getClipBounds().width : 0;
+//                    y2 = a * (x2 - s.u.x) + s.u.y;
+//                }
+//            }
+//        }
+//        g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
     }
 
 }
