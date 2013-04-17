@@ -293,12 +293,12 @@ public class Voronoi {
                 Vert newVert = vor1.new Vert(interCr, newEdge);
                 Vert newEndDivEdge = vor1.new Vert(l.findLowerPoint(bound), twinNewEdge);
 
-                newEdge.fill(newVert, twinNewEdge, eCr.getTwin().getFace(), eCr.getTwin());
-                twinNewEdge.fill(newEndDivEdge, newEdge, lastDivEdge.getTwin().getFace(), lastDivEdge.getTwin());
-                lastDivEdge.getTwin().setOrigin(newVert);
+                newEdge.fill(newVert, twinNewEdge, cr, eCr.getTwin().getNext());
+                twinNewEdge.fill(newEndDivEdge, newEdge, cl, lastDivEdge.getTwin());
                 lastDivEdge.setNext(eCr);
-                eCr.setNext(newEdge);
+                lastDivEdge.getTwin().setOrigin(newVert);
                 eCr.setOrigin(newVert);
+                eCr.getTwin().setNext(newEdge);
 
                 res.addEdge(newEdge);
                 res.addEdge(twinNewEdge);
@@ -315,10 +315,10 @@ public class Voronoi {
                 Vert newVert = vor1.new Vert(interCl, newEdge);
                 Vert newEndDivEdge = vor1.new Vert(l.findLowerPoint(bound), twinNewEdge);
 
-                newEdge.fill(newVert, twinNewEdge, eCl.getTwin().getFace(), lastDivEdge.getNext());
-                twinNewEdge.fill(newEndDivEdge, newEdge, eCl.getTwin().getFace(), eCl.getTwin());
-                lastDivEdge.getTwin().setOrigin(newVert);
+                newEdge.fill(newVert, twinNewEdge, cl, lastDivEdge.getNext());
+                twinNewEdge.fill(newEndDivEdge, newEdge, cl, eCl.getTwin());
                 lastDivEdge.setNext(newEdge);
+                lastDivEdge.getTwin().setOrigin(newVert);
                 eCl.setNext(lastDivEdge.getTwin());
                 eCl.getTwin().setOrigin(newVert);
 
@@ -340,8 +340,8 @@ public class Voronoi {
 
                 newEdge.fill(newVert, twinNewEdge, cr, eCr.getTwin().getNext());
                 twinNewEdge.fill(newEndDivEdge, newEdge, cl, eCl.getTwin());
-                lastDivEdge.getTwin().setOrigin(newVert);
                 lastDivEdge.setNext(eCr);
+                lastDivEdge.getTwin().setOrigin(newVert);
                 eCl.setNext(lastDivEdge.getTwin());
                 eCl.getTwin().setOrigin(newVert);
                 eCr.setOrigin(newVert);
