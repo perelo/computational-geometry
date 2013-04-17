@@ -76,7 +76,9 @@ public class Line {
                 y = findY(x);
             }
         }
-        return new Point((int) x, (int) y);
+        Point p = new Point((int) x, (int) y);
+        p.setInfinite(true);
+        return p;
     }
 
     /**
@@ -104,7 +106,9 @@ public class Line {
                 y = findY(x);
             }
         }
-        return new Point((int) x, (int) y);
+        Point p = new Point((int) x, (int) y);
+        p.setInfinite(true);
+        return p;
     }
 
     /**
