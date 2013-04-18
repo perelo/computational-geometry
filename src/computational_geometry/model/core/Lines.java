@@ -74,17 +74,17 @@ public class Lines {
         if (p == null || s == null)
             return false;
         if (s.v.isInfinite()) {
-            if ((s.u.x < s.v.x && p.x >= s.u.x) ||
-                (s.u.x > s.v.x && p.x <= s.u.x)) return true;
+            if ((s.u.x <= s.v.x && p.x >= s.u.x) ||
+                (s.u.x >= s.v.x && p.x <= s.u.x)) return true;
         }
         if (s.u.isInfinite()) {
-            if ((s.u.x < s.v.x && p.x <= s.v.x) ||
-                (s.u.x > s.v.x && p.x >= s.v.x)) return true;
+            if ((s.u.x <= s.v.x && p.x <= s.v.x) ||
+                (s.u.x >= s.v.x && p.x >= s.v.x)) return true;
         }
-        return ((s.u.x < s.v.x && p.x >= s.u.x && p.x <= s.v.x) ||
-                (s.u.x > s.v.x && p.x <= s.u.x && p.x >= s.v.x))
-            && ((s.u.x < s.v.x && p.x >= s.u.x && p.x <= s.v.x) ||
-                (s.u.x > s.v.x && p.x <= s.u.x && p.x >= s.v.x));
+        return ((s.u.x <= s.v.x && p.x >= s.u.x && p.x <= s.v.x) ||
+                (s.u.x >= s.v.x && p.x <= s.u.x && p.x >= s.v.x))
+            && ((s.u.x <= s.v.x && p.x >= s.u.x && p.x <= s.v.x) ||
+                (s.u.x >= s.v.x && p.x <= s.u.x && p.x >= s.v.x));
     }
 
 }
