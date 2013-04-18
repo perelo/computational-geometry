@@ -24,8 +24,8 @@ public class Point implements Comparable<Point> {
         START, END, MERGE, SPLIT, REGULARR, REGULARL, UNKNOWN
     }
 
-    public int x;
-    public int y;
+    public double x;
+    public double y;
     public Side side;
     public Type type;
     public int pos;
@@ -40,7 +40,7 @@ public class Point implements Comparable<Point> {
 
     public final static int range = 2;
 
-    public Point(int x, int y) {
+    public Point(double x, double y) {
         this.x = x;
         this.y = y;
         this.side = Side.UNKNOWN;

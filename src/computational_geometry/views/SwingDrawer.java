@@ -44,9 +44,9 @@ public class SwingDrawer implements Drawer {
      */
     public void drawPoint(Point p) {
         if (p != null) {
-            g.fillOval(p.x - Point.range, p.y - Point.range,
+            g.fillOval((int)p.x - Point.range, (int)p.y - Point.range,
                     2 * Point.range + 1, 2 * Point.range + 1);
-            g.drawOval(p.x - 2 * Point.range, p.y - 2 * Point.range,
+            g.drawOval((int)p.x - 2 * Point.range, (int)p.y - 2 * Point.range,
                     2 * 2 * Point.range + 1, 2 * 2 * Point.range + 1);
         }
     }
@@ -58,11 +58,11 @@ public class SwingDrawer implements Drawer {
      */
     public void drawMark(Point p) {
         if (p.side == Point.Side.LEFT) {
-            g.drawString(p.pos + " G", p.x - 30, p.y);
+            g.drawString(p.pos + " G", (int)p.x - 30, (int)p.y);
         } else if (p.side == Point.Side.RIGHT) {
-            g.drawString("D " + p.pos, p.x + 15, p.y);
+            g.drawString("D " + p.pos, (int)p.x + 15, (int)p.y);
         } else {
-            g.drawString(p.pos + "", p.x + 15, p.y);
+            g.drawString(p.pos + "", (int)p.x + 15, (int)p.y);
         }
     }
 
@@ -73,13 +73,13 @@ public class SwingDrawer implements Drawer {
      */
     public void drawType(Point p) {
         if (p.type == Point.Type.START || p.type == Point.Type.SPLIT) {
-            g.drawString(p.type.toString(), p.x, p.y - 20);
+            g.drawString(p.type.toString(), (int)p.x, (int)p.y - 20);
         } else if (p.type == Point.Type.END || p.type == Point.Type.MERGE) {
-            g.drawString(p.type.toString(), p.x, p.y + 20);
+            g.drawString(p.type.toString(), (int)p.x, (int)p.y + 20);
         } else if (p.type == Point.Type.REGULARR) {
-            g.drawString(p.type.toString(), p.x - 80, p.y);
+            g.drawString(p.type.toString(), (int)p.x - 80, (int)p.y);
         } else if (p.type == Point.Type.REGULARL) {
-            g.drawString(p.type.toString(), p.x + 10, p.y);
+            g.drawString(p.type.toString(), (int)p.x + 10, (int)p.y);
         }
         // if unknown, leave it
     }
@@ -89,7 +89,7 @@ public class SwingDrawer implements Drawer {
      * @param p
      */
     public void drawCoordinates(Point p) {
-        g.drawString("(" + p.x + ", " + p.y + ')', p.x - 25, p.y + 20);
+        g.drawString("(" + (int)p.x + ", " + (int)p.y + ')', (int)p.x - 25, (int)p.y + 20);
     }
 
     /**
@@ -125,7 +125,7 @@ public class SwingDrawer implements Drawer {
         if (s == null) {
             throw new IllegalArgumentException("segment is null");
         }
-        g.drawLine(s.u.x, s.u.y, s.v.x, s.v.y);
+        g.drawLine((int)s.u.x, (int)s.u.y, (int)s.v.x, (int)s.v.y);
 //        if (!s.u.isInfinite() && !s.v.isInfinite()) {
 //            g.drawLine(s.u.x, s.u.y, s.v.x, s.v.y);
 //            return;

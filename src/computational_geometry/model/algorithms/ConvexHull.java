@@ -42,7 +42,7 @@ public class ConvexHull {
         // Q
         Stack<LinkNode<Point>> stackEnvelop = new Stack<LinkNode<Point>>();
 
-        int maxX = 0;
+        double maxX = 0;
         Point rightMost = null;
         for (Point p : polygon.getPoints()) {
             if (p.x >= maxX) {

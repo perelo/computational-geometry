@@ -238,7 +238,7 @@ public class Voronoi {
 
         // the ray will be l bounded at y by rayUpperBound
         Point lastDivPoint = l.findUpperPoint(bound);
-        int rayUpperBound = Integer.MIN_VALUE;
+        int rayUpperBound = Integer.MIN_VALUE;//Double.NEGATIVE_INFINITY;
         Edge lastDivEdge = vor1.new Edge(); // downward
         Edge twinLastDivEdge = vor1.new Edge();
 
@@ -378,7 +378,7 @@ public class Voronoi {
                 lastDivPoint = interCl;
             }
             divPoints.add(lastDivPoint);
-            rayUpperBound = lastDivPoint.y;
+            rayUpperBound = (int) Math.ceil(lastDivPoint.y);//+1;
             interCr = interCl = null;
         }
         l = Lines.findBisector(curSeg.u, curSeg.v);

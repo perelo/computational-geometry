@@ -76,7 +76,7 @@ public class Line {
                 y = findY(x);
             }
         }
-        Point p = new Point((int) x, (int) y);
+        Point p = new Point(x, y);
         p.setInfinite(true);
         return p;
     }
@@ -106,7 +106,7 @@ public class Line {
                 y = findY(x);
             }
         }
-        Point p = new Point((int) x, (int) y);
+        Point p = new Point(x, y);
         p.setInfinite(true);
         return p;
     }
@@ -134,7 +134,7 @@ public class Line {
         }
         x = (B * l.C - l.B * C) / det;
         y = (l.A * C - A * l.C) / det;
-        return new Point((int) x, (int) y);
+        return new Point(x, y);
     }
 
 }

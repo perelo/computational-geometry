@@ -83,13 +83,13 @@ public class MonotonTriangTrace implements AlgoTrace {
         // draw event (point)
         g.setColor(Color.YELLOW);
         Point p = event.p;
-        g.fillOval(p.x - Point.range, p.y - Point.range, 2 * Point.range + 1,
+        g.fillOval((int)p.x - Point.range, (int)p.y - Point.range, 2 * Point.range + 1,
                 2 * Point.range + 1);
-        g.drawOval(p.x - 2 * Point.range, p.y - 2 * Point.range,
+        g.drawOval((int)p.x - 2 * Point.range, (int)p.y - 2 * Point.range,
                 2 * 2 * Point.range + 1, 2 * 2 * Point.range + 1);
         // draw sweep line
         g.setColor(c);
-        g.drawLine(0, event.p.y, (int) g.getClipBounds().getWidth(), event.p.y);
+        g.drawLine(0, (int)event.p.y, (int) g.getClipBounds().getWidth(), (int)event.p.y);
     }
 
     @Override

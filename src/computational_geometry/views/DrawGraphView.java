@@ -227,7 +227,7 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements
         for (int n = 0; n < points.size(); ++n) {
             Point p = points.elementAt(n);
             if (attachedPanel.drawPointPos.isSelected()) {
-                g.drawString(n + "", p.x, p.y - 20);
+                g.drawString(n + "", (int)p.x, (int)p.y - 20);
             }
 
             if (n == attachedPanel.model.getNumSelectedPoint())

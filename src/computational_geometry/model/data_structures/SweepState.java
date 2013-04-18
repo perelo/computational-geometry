@@ -50,7 +50,7 @@ public class SweepState extends BinarySearchTree<Segment> {
 
     public void setEvent(Point p) {
         this.pEvent = p;
-        Segment.yComp = pEvent.y;
+        Segment.yComp = (int) pEvent.y;
     }
 
 }

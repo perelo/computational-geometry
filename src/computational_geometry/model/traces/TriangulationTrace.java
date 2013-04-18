@@ -96,8 +96,8 @@ public class TriangulationTrace implements AlgoTrace {
         int[] xPoints = new int[p.getNbPoints()];
         int[] yPoints = new int[p.getNbPoints()];
         for (int i = 0; i < p.getNbPoints(); ++i) {
-            xPoints[i] = p.getPoints().get(i).x;
-            yPoints[i] = p.getPoints().get(i).y;
+            xPoints[i] = (int)p.getPoints().get(i).x;
+            yPoints[i] = (int)p.getPoints().get(i).y;
         }
         g.drawPolygon(xPoints, yPoints, p.getNbPoints());
     }
