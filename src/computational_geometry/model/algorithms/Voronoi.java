@@ -284,7 +284,7 @@ public class Voronoi {
             if (interCr == null && interCl == null) {
                 System.err.println("OMG : ray didn't find anything");
                 break;
-            } else if (interCl == null || (interCr != null && interCl.y > interCr.y)) {
+            } else if (interCl == null || (interCr != null && interCl.y > interCr.y+2)) {
                 cr = (VorCell) eCr.getTwin().getFace();
                 l = Lines.findBisector(cl.getSite(), cr.getSite());
 
@@ -313,7 +313,7 @@ public class Voronoi {
                 eCr = newEdge.getNext();
                 lastDivEdge = newEdge;
                 lastDivPoint = interCr;
-            } else if (interCr == null || (interCl != null && interCl.y < interCr.y)) {
+            } else if (interCr == null || (interCl != null && interCl.y+2 < interCr.y)) {
                 cl = (VorCell) eCl.getTwin().getFace();
                 l = Lines.findBisector(cl.getSite(), cr.getSite());
                 Edge newEdge = vor1.new Edge();
