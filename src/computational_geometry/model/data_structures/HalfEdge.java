@@ -26,6 +26,10 @@ public class HalfEdge {
         protected Point p;
         protected Edge edge;
 
+        public String toString() {
+            return "vert.p=" + p;
+        }
+
         public Vert(Point p, Edge e) {
             this.p = p;
             this.edge = e;

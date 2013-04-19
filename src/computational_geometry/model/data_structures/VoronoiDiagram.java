@@ -20,6 +20,10 @@ public class VoronoiDiagram extends HalfEdge {
     public class VorCell extends HalfEdge.Face {
         protected Point site;
 
+        public String toString() {
+            return "site=" + site;
+        }
+
         public VorCell(Point site, Edge e) {
             super(e);
             this.site = site;
