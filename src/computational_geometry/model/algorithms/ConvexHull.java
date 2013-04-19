@@ -200,6 +200,9 @@ public class ConvexHull {
     }
 
     public static HullResult unionHull(LinkNode<Point> hull1, LinkNode<Point> hull2) {
+        HullResult res = new HullResult();
+        res.setLastLeftHull(HullResult.copyRevertHull(hull1));
+        res.setLastRightHull(HullResult.copyRevertHull(hull2));
         LinkNode<Point> tmp, u, v, uh, vh, ul, vl;
         tmp = u = hull1;
         do {
@@ -219,6 +222,7 @@ public class ConvexHull {
         ul = u;
         vl = v;
         boolean b;
+        res.getLastTmpTangents().add(new Segment(uh.getValue(), vh.getValue()));
         while ((b = Utils.orientation(vh.getPrev().getValue(), vh.getValue(), uh.getValue()) > 0) ||
                Utils.orientation(uh.getValue(), uh.getNext().getValue(), vh.getValue()) > 0) {
             if (b) {
@@ -226,7 +230,10 @@ public class ConvexHull {
             } else {
                 uh = uh.getNext();
             }
+            res.getLastTmpTangents().add(new Segment(uh.getValue(), vh.getValue()));
         }
+        res.setUpperTanIndex(res.getLastTmpTangents().size()-1);
+        res.getLastTmpTangents().add(new Segment(ul.getValue(), vl.getValue()));
         while ((b = Utils.orientation(vl.getValue(), vl.getNext().getValue(), ul.getValue()) > 0) ||
                Utils.orientation(ul.getValue(), ul.getPrev().getValue(), vl.getValue()) < 0) {
             if (b) {
@@ -234,12 +241,12 @@ public class ConvexHull {
             } else {
                 ul = ul.getPrev();
             }
+            res.getLastTmpTangents().add(new Segment(ul.getValue(), vl.getValue()));
         }
         uh.setPrev(vh);
         vh.setNext(uh);
         ul.setNext(vl);
         vl.setPrev(ul);
-        HullResult res = new HullResult();
         res.setHull(uh);
         res.setLowerTangent(new Segment(ul.getValue(), vl.getValue()));
         res.setUpperTangent(new Segment(uh.getValue(), vh.getValue()));

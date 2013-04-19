@@ -10,6 +10,7 @@ import java.util.List;
 
 import computational_geometry.model.beans.Point;
 import computational_geometry.model.beans.Segment;
+import computational_geometry.model.data_structures.CircularList;
 import computational_geometry.model.data_structures.LinkNode;
 import computational_geometry.views.SwingDrawer;
 
@@ -18,12 +19,18 @@ import computational_geometry.views.SwingDrawer;
  * @author eloi
  *
  */
-public class HullResult extends SimpleAlgoResult {
+public class HullResult implements AlgoTrace {
 
     private List<Segment> segments; // TODO remove, but check TODO on polygonConvexHull b4
     private LinkNode<Point> hull;
     private Segment lowerTangent;
     private Segment upperTangent;
+
+    private LinkNode<Point> lastLeftHull;
+    private LinkNode<Point> lastRightHull;
+    private List<Segment> lastTmpTangents;
+    private int upperTanIndex;
+    private int state;  // index in lastTmpTangents
 
     @Override
     public void drawFullResult(Graphics g) {
@@ -34,30 +41,77 @@ public class HullResult extends SimpleAlgoResult {
             for (Segment s : segments) {
                 drawer.drawSegment(s);
             }
-        }
-        else if (hull != null) {
+        } else if (hull != null) {
             LinkNode<Point> node = hull;
             do {
                 drawer.drawSegment(new Segment(node.getValue(), node.getNext().getValue()));
                 node = node.getNext();
             } while (!node.getValue().equals(hull.getValue()));
-            g.setColor(Color.RED);
-            Graphics2D g2 = (Graphics2D) g;
-            Stroke s = g2.getStroke();
-            g2.setStroke(new BasicStroke(2));
-            if (lowerTangent != null) {
-                drawer.drawSegment(lowerTangent);
-            }
-            if (upperTangent != null) {
-                drawer.drawSegment(upperTangent);
-            }
-            g2.setStroke(s);
         }
+        g.setColor(c);
+    }
+
+    @Override
+    public void nextStep() {
+        ++state;
+    }
+
+    @Override
+    public boolean hasStep() {
+        return state < lastTmpTangents.size() - 1;
+    }
+
+    @Override
+    public boolean isDone() {
+        return state >= lastTmpTangents.size();
+    }
+
+    @Override
+    public void drawCurrentState(Graphics g) {
+        if (lastLeftHull == null || lastRightHull == null) {
+            return;
+        }
+        Color c = g.getColor();
+        g.setColor(Color.GREEN);
+        Drawer drawer = SwingDrawer.getInstance(g);
+        LinkNode<Point> node = lastLeftHull;
+        do {
+            drawer.drawSegment(new Segment(node.getValue(), node.getNext().getValue()));
+            node = node.getNext();
+        } while (!node.getValue().equals(lastLeftHull.getValue()));
+        node = lastRightHull;
+        do {
+            drawer.drawSegment(new Segment(node.getValue(), node.getNext().getValue()));
+            node = node.getNext();
+        } while (!node.getValue().equals(lastRightHull.getValue()));
+        g.setColor(Color.RED);
+        Graphics2D g2 = (Graphics2D) g;
+        Stroke s = g2.getStroke();
+        g2.setStroke(new BasicStroke(2));
+        if (state >= upperTanIndex) {
+            drawer.drawSegment(upperTangent);
+        }
+        drawer.drawSegment(lastTmpTangents.get(state));
+        g2.setStroke(s);
         g.setColor(c);
     }
 
     public HullResult() {
         this.segments = new ArrayList<Segment>();
+        this.lastTmpTangents = new ArrayList<Segment>();
+    }
+
+    public static LinkNode<Point> copyRevertHull(LinkNode<Point> hull) {
+        if (hull == null) {
+            return null;
+        }
+        CircularList<Point> revertedHull = new CircularList<Point>();
+        LinkNode<Point> ref = hull;
+        do {
+            revertedHull.addFirst(hull.getValue());
+            hull = hull.getNext();
+        } while (!hull.getValue().equals(ref.getValue()));
+        return revertedHull.getNode(0);
     }
 
     public void addSegment(Segment s) {
@@ -98,6 +152,38 @@ public class HullResult extends SimpleAlgoResult {
 
     public void setSegments(List<Segment> segments) {
         this.segments = segments;
+    }
+
+    public LinkNode<Point> getLastLeftHull() {
+        return lastLeftHull;
+    }
+
+    public void setLastLeftHull(LinkNode<Point> lastLeftHull) {
+        this.lastLeftHull = lastLeftHull;
+    }
+
+    public LinkNode<Point> getLastRightHull() {
+        return lastRightHull;
+    }
+
+    public void setLastRightHull(LinkNode<Point> lastRightHull) {
+        this.lastRightHull = lastRightHull;
+    }
+
+    public List<Segment> getLastTmpTangents() {
+        return lastTmpTangents;
+    }
+
+    public void setLastTmpTangents(List<Segment> lastTmpTangents) {
+        this.lastTmpTangents = lastTmpTangents;
+    }
+
+    public int getUpperTanIndex() {
+        return upperTanIndex;
+    }
+
+    public void setUpperTanIndex(int upperTanIndex) {
+        this.upperTanIndex = upperTanIndex;
     }
 
 }
