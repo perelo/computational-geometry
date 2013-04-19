@@ -11,6 +11,7 @@ import computational_geometry.model.beans.Point;
 import computational_geometry.model.beans.Segment;
 import computational_geometry.model.core.Lines;
 import computational_geometry.model.core.PointComparatorX;
+import computational_geometry.model.core.Utils;
 import computational_geometry.model.data_structures.HalfEdge.Edge;
 import computational_geometry.model.data_structures.HalfEdge.Face;
 import computational_geometry.model.data_structures.HalfEdge.Vert;
@@ -138,8 +139,12 @@ public class Voronoi {
             vor.addEdge(e21);
             vor.addEdge(e22);
 
-        } else {    // inter != null
+        } else {    // inter != null <=> orientation(p1, p2, p3) != 0
 
+            // edges naming convention :
+            // e11 is the edge of cell c1 which origin is inter, e12 is it's twin
+            // e21 is the edge of cell c2 which origin is inter, e22 is it's twin
+            // e31 is the edge of cell c3 which origin is inter, e32 is it's twin
             Edge e11 = vor.new Edge();
             Edge e12 = vor.new Edge();
             Edge e21 = vor.new Edge();
@@ -147,8 +152,12 @@ public class Voronoi {
             Edge e31 = vor.new Edge();
             Edge e32 = vor.new Edge();
 
+            // voronoi cells naming convention :
+            // c1 is the cell whose site is p1
+            // c2 is the cell whose site is p2
+            // c3 is the cell whose site is p3
             c1 = vor.new VorCell(p1, e11);
-            c2 = vor.new VorCell(p2, e22);
+            c2 = vor.new VorCell(p2, e21);
             c3 = vor.new VorCell(p3, e31);
 
             // the three points bounding the bisectors in the rectangle
@@ -166,17 +175,33 @@ public class Voronoi {
                 q3 = b3.findLowerPoint(bound);
             }
 
-            Vert vInter = vor.new Vert(inter, e11);
-            Vert v1 = vor.new Vert(q1, e11);
-            Vert v2 = vor.new Vert(q2, e32);
-            Vert v3 = vor.new Vert(q3, e22);
-
-            e11.fill(v1, e21, c1, e12);
-            e12.fill(vInter, e32, c1, e11);
-            e21.fill(vInter, e11, c2, e22);
-            e22.fill(v3, e31, c2, e21);
-            e31.fill(vInter, e22, c3, e32);
-            e32.fill(v2, e12, c3, e31);
+            Vert v0 = vor.new Vert(inter, e12);
+            // vertex naming convention :
+            // v1 is the infinite point in bisector(p1, p2),
+            // v2 is the infinite point in bisector(p1, p3),
+            // v3 is the infinite point in bisector(p3, p4),
+            Vert v1, v2, v3;
+            if (Utils.orientation(p1, p2, p3) < 0) {
+                v1 = vor.new Vert(q1, e11);
+                v2 = vor.new Vert(q2, e31);
+                v3 = vor.new Vert(q3, e21);
+                e11.fill(v1, e12, c1, e32);
+                e12.fill(v0, e11, c2, e21);
+                e21.fill(v3, e22, c2, e12);
+                e22.fill(v0, e21, c3, e31);
+                e31.fill(v2, e32, c3, e22);
+                e32.fill(v0, e31, c1, e11);
+            } else {    // Utils.orientation(p1, p2, p3) > 0
+                v1 = vor.new Vert(q1, e21);
+                v2 = vor.new Vert(q2, e11);
+                v3 = vor.new Vert(q3, e31);
+                e11.fill(v2, e12, c1, e22);
+                e12.fill(v0, e11, c3, e31);
+                e21.fill(v1, e22, c2, e32);
+                e22.fill(v0, e21, c1, e11);
+                e31.fill(v3, e32, c3, e12);
+                e32.fill(v0, e31, c2, e21);
+            }
 
             vor.addEdge(e11);
             vor.addEdge(e12);
