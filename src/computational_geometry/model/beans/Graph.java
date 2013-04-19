@@ -58,6 +58,9 @@ public abstract class Graph {
     public void clear() {
         segments.clear();
         points.clear();
+        for (GraphAlgorithm algo : algorithms) {
+            algo.trace = null;
+        }
         clearMarks();
     }
 
