@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import computational_geometry.model.beans.Line;
 import computational_geometry.model.beans.Point;
 import computational_geometry.model.beans.Segment;
+import computational_geometry.model.data_structures.LinkNode;
 import computational_geometry.model.traces.Drawer;
 
 /**
@@ -125,7 +126,7 @@ public class SwingDrawer implements Drawer {
         if (s == null) {
             throw new IllegalArgumentException("segment is null");
         }
-        g.drawLine((int)s.u.x, (int)s.u.y, (int)s.v.x, (int)s.v.y);
+        drawSegment(s.u, s.v);
 //        if (!s.u.isInfinite() && !s.v.isInfinite()) {
 //            g.drawLine(s.u.x, s.u.y, s.v.x, s.v.y);
 //            return;
@@ -166,6 +167,28 @@ public class SwingDrawer implements Drawer {
 //            }
 //        }
 //        g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+    }
+
+    @Override
+    public void drawSegment(Point u, Point v) {
+        if (u == null || v == null) {
+            throw new IllegalArgumentException("u or v is null");
+        }
+        g.drawLine((int) u.x, (int) u.y, (int) v.x, (int) v.y);
+    }
+
+    @Override
+    public void drawSegmentsBetweenPoints(LinkNode<Point> nodePoint) {
+        if (nodePoint == null) {
+            return;
+        }
+        LinkNode<Point> lnp;
+        for (lnp = nodePoint; !lnp.getNext().equals(nodePoint) && lnp.getNext() != null; lnp = lnp.getNext()) {
+            drawSegment(lnp.getValue(), lnp.getNext().getValue());
+        }
+        if (lnp != null) {
+            drawSegment(lnp.getValue(), nodePoint.getValue());
+        }
     }
 
 }

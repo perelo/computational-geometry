@@ -3,6 +3,7 @@ package computational_geometry.model.traces;
 import computational_geometry.model.beans.Line;
 import computational_geometry.model.beans.Point;
 import computational_geometry.model.beans.Segment;
+import computational_geometry.model.data_structures.LinkNode;
 
 /**
  * Interface Drawer used to draw beans and data structures
@@ -52,5 +53,19 @@ public interface Drawer {
      * @param s
      */
     public void drawSegment(Segment s);
+
+    /**
+     * Draw a simple line between the two given points
+     * @param u
+     * @param v
+     */
+    public void drawSegment(Point u, Point v);
+
+    /**
+     * Draw the segments between the points given in
+     * a node representing a circular list
+     * @param nodePoint
+     */
+    public void drawSegmentsBetweenPoints(LinkNode<Point> nodePoint);
 
 }

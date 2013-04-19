@@ -42,11 +42,7 @@ public class HullResult implements AlgoTrace {
                 drawer.drawSegment(s);
             }
         } else if (hull != null) {
-            LinkNode<Point> node = hull;
-            do {
-                drawer.drawSegment(new Segment(node.getValue(), node.getNext().getValue()));
-                node = node.getNext();
-            } while (!node.getValue().equals(hull.getValue()));
+            drawer.drawSegmentsBetweenPoints(hull);
         }
         g.setColor(c);
     }
@@ -74,16 +70,8 @@ public class HullResult implements AlgoTrace {
         Color c = g.getColor();
         g.setColor(Color.GREEN);
         Drawer drawer = SwingDrawer.getInstance(g);
-        LinkNode<Point> node = lastLeftHull;
-        do {
-            drawer.drawSegment(new Segment(node.getValue(), node.getNext().getValue()));
-            node = node.getNext();
-        } while (!node.getValue().equals(lastLeftHull.getValue()));
-        node = lastRightHull;
-        do {
-            drawer.drawSegment(new Segment(node.getValue(), node.getNext().getValue()));
-            node = node.getNext();
-        } while (!node.getValue().equals(lastRightHull.getValue()));
+        drawer.drawSegmentsBetweenPoints(lastLeftHull);
+        drawer.drawSegmentsBetweenPoints(lastRightHull);
         g.setColor(Color.RED);
         Graphics2D g2 = (Graphics2D) g;
         Stroke s = g2.getStroke();
