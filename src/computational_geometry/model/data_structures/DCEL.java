@@ -116,6 +116,10 @@ public class DCEL {
         public Edge getEdge() {
             return edge;
         }
+
+        public void setEdge(Edge edge) {
+            this.edge = edge;
+        }
     }
 
     /**
