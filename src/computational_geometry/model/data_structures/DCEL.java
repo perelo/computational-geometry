@@ -8,18 +8,18 @@ import computational_geometry.model.beans.Point;
 import computational_geometry.model.beans.Segment;
 
 /**
- * Half-Edge data structure
+ * Double Connected Edge list data structure
  * @author eloi
  *
  */
-public class HalfEdge {
+public class DCEL {
 
     private List<Edge> edges;
     private List<Face> faces;
 
-    public HalfEdge() {
-        edges = new ArrayList<HalfEdge.Edge>();
-        faces = new ArrayList<HalfEdge.Face>();
+    public DCEL() {
+        edges = new ArrayList<DCEL.Edge>();
+        faces = new ArrayList<DCEL.Face>();
     }
 
     public class Vert {
@@ -51,18 +51,22 @@ public class HalfEdge {
         protected Edge twin;
         protected Face face;
         protected Edge next;
+        protected Edge prev;
+
         public Edge() {
             isNew = false;
         }
+
         public String toString() {
             return getSegment().toString();
         }
 
-        public void fill(Vert origin, Edge twin, Face face, Edge next) {
+        public void fill(Vert origin, Edge twin, Face face, Edge next, Edge prev) {
             this.origin = origin;
             this.twin = twin;
             this.face = face;
             this.next = next;
+            this.prev = prev;
         }
 
         public Segment getSegment() {
@@ -91,6 +95,14 @@ public class HalfEdge {
 
         public void setNext(Edge next) {
             this.next = next;
+        }
+
+        public Edge getPrev() {
+            return prev;
+        }
+
+        public void setPrev(Edge prev) {
+            this.prev = prev;
         }
     }
 

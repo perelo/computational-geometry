@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import java.util.Iterator;
 
 import computational_geometry.model.beans.Segment;
-import computational_geometry.model.data_structures.HalfEdge.Edge;
+import computational_geometry.model.data_structures.DCEL.Edge;
 import computational_geometry.model.data_structures.VoronoiDiagram;
 import computational_geometry.views.SwingDrawer;
 

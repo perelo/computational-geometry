@@ -12,9 +12,9 @@ import computational_geometry.model.beans.Segment;
 import computational_geometry.model.core.Lines;
 import computational_geometry.model.core.PointComparatorX;
 import computational_geometry.model.core.Utils;
-import computational_geometry.model.data_structures.HalfEdge.Edge;
-import computational_geometry.model.data_structures.HalfEdge.Face;
-import computational_geometry.model.data_structures.HalfEdge.Vert;
+import computational_geometry.model.data_structures.DCEL.Edge;
+import computational_geometry.model.data_structures.DCEL.Face;
+import computational_geometry.model.data_structures.DCEL.Vert;
 import computational_geometry.model.data_structures.VoronoiDiagram;
 import computational_geometry.model.data_structures.VoronoiDiagram.VorCell;
 import computational_geometry.model.traces.HullResult;
@@ -80,8 +80,8 @@ public class Voronoi {
         Vert v1 = vor.new Vert(bisector.findLowerPoint(bound), e1);
         Vert v2 = vor.new Vert(bisector.findUpperPoint(bound), e2);
 
-        e1.fill(v1, e2, c1, e1);
-        e2.fill(v2, e1, c2, e2);
+        e1.fill(v1, e2, c1, e1, e1);
+        e2.fill(v2, e1, c2, e2, e2);
 
         vor.addEdge(e1);
         vor.addEdge(e2);
@@ -129,10 +129,10 @@ public class Voronoi {
             Vert v3 = vor.new Vert(b3.findLowerPoint(bound), e21);
             Vert v4 = vor.new Vert(b3.findUpperPoint(bound), e22);
 
-            e11.fill(v1, e12, c1, e11);
-            e12.fill(v2, e11, c2, e12);
-            e21.fill(v3, e22, c2, e21);
-            e22.fill(v4, e21, c3, e22);
+            e11.fill(v1, e12, c1, e11, e11);
+            e12.fill(v2, e11, c2, e12, e12);
+            e21.fill(v3, e22, c2, e21, e21);
+            e22.fill(v4, e21, c3, e22, e22);
 
             vor.addEdge(e11);
             vor.addEdge(e12);
@@ -185,22 +185,22 @@ public class Voronoi {
                 v1 = vor.new Vert(q1, e11);
                 v2 = vor.new Vert(q2, e31);
                 v3 = vor.new Vert(q3, e21);
-                e11.fill(v1, e12, c1, e32);
-                e12.fill(v0, e11, c2, e21);
-                e21.fill(v3, e22, c2, e12);
-                e22.fill(v0, e21, c3, e31);
-                e31.fill(v2, e32, c3, e22);
-                e32.fill(v0, e31, c1, e11);
+                e11.fill(v1, e12, c1, e32, e32);
+                e12.fill(v0, e11, c2, e21, e21);
+                e21.fill(v3, e22, c2, e12, e12);
+                e22.fill(v0, e21, c3, e31, e31);
+                e31.fill(v2, e32, c3, e22, e22);
+                e32.fill(v0, e31, c1, e11, e11);
             } else {    // Utils.orientation(p1, p2, p3) > 0
                 v1 = vor.new Vert(q1, e21);
                 v2 = vor.new Vert(q2, e11);
                 v3 = vor.new Vert(q3, e31);
-                e11.fill(v2, e12, c1, e22);
-                e12.fill(v0, e11, c3, e31);
-                e21.fill(v1, e22, c2, e32);
-                e22.fill(v0, e21, c1, e11);
-                e31.fill(v3, e32, c3, e12);
-                e32.fill(v0, e31, c2, e21);
+                e11.fill(v2, e12, c1, e22, e22);
+                e12.fill(v0, e11, c3, e31, e31);
+                e21.fill(v1, e22, c2, e32, e32);
+                e22.fill(v0, e21, c1, e11, e11);
+                e31.fill(v3, e32, c3, e12, e12);
+                e32.fill(v0, e31, c2, e21, e21);
             }
 
             vor.addEdge(e11);
@@ -270,8 +270,8 @@ public class Voronoi {
         Vert v1 = vor1.new Vert(lastDivPoint, lastDivEdge);
         Vert v2 = vor1.new Vert(l.findLowerPoint(bound), twinLastDivEdge);
 
-        lastDivEdge.fill(v1, twinLastDivEdge, cr, lastDivEdge);
-        twinLastDivEdge.fill(v2, lastDivEdge, cl, twinLastDivEdge);
+        lastDivEdge.fill(v1, twinLastDivEdge, cr, lastDivEdge, lastDivEdge);
+        twinLastDivEdge.fill(v2, lastDivEdge, cl, twinLastDivEdge, twinLastDivEdge);
 
         res.addEdge(lastDivEdge);
         res.addEdge(twinLastDivEdge);
@@ -322,8 +322,8 @@ public class Voronoi {
                 Vert newEndDivEdge = vor1.new Vert(l.findLowerPoint(bound), twinNewEdge);
                 newEndDivEdge.getPoint().setInfinite(false);
 
-                newEdge.fill(newVert, twinNewEdge, cr, eCr.getTwin().getNext());
-                twinNewEdge.fill(newEndDivEdge, newEdge, cl, lastDivEdge.getTwin());
+                newEdge.fill(newVert, twinNewEdge, cr, eCr.getTwin().getNext(), eCr.getTwin());
+                twinNewEdge.fill(newEndDivEdge, newEdge, cl, lastDivEdge.getTwin(), eCr.getTwin().getNext());
                 lastDivEdge.setNext(eCr);
                 lastDivEdge.getTwin().setOrigin(newVert);
                 eCr.setOrigin(newVert);
@@ -350,8 +350,8 @@ public class Voronoi {
                 Vert newEndDivEdge = vor1.new Vert(l.findLowerPoint(bound), twinNewEdge);
                 newEndDivEdge.getPoint().setInfinite(false);
 
-                newEdge.fill(newVert, twinNewEdge, cl, lastDivEdge.getNext());
-                twinNewEdge.fill(newEndDivEdge, newEdge, cl, eCl.getTwin());
+                newEdge.fill(newVert, twinNewEdge, cl, lastDivEdge.getNext(), eCl.getTwin().getPrev());
+                twinNewEdge.fill(newEndDivEdge, newEdge, cl, eCl.getTwin(), eCl.getTwin().getNext());
                 lastDivEdge.setNext(newEdge);
                 lastDivEdge.getTwin().setOrigin(newVert);
                 eCl.setNext(lastDivEdge.getTwin());
@@ -379,8 +379,8 @@ public class Voronoi {
                 Vert newEndDivEdge = vor1.new Vert(l.findLowerPoint(bound), twinNewEdge);
                 newEndDivEdge.getPoint().setInfinite(false);
 
-                newEdge.fill(newVert, twinNewEdge, cr, eCr.getTwin().getNext());
-                twinNewEdge.fill(newEndDivEdge, newEdge, cl, eCl.getTwin());
+                newEdge.fill(newVert, twinNewEdge, cr, eCr.getTwin().getNext(), eCr.getTwin());
+                twinNewEdge.fill(newEndDivEdge, newEdge, cl, eCl.getTwin(), eCl.getTwin().getNext());
                 lastDivEdge.setNext(eCr);
                 lastDivEdge.getTwin().setOrigin(newVert);
                 eCl.setNext(lastDivEdge.getTwin());

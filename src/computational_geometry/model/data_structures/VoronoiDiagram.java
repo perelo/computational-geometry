@@ -9,7 +9,7 @@ import computational_geometry.model.beans.Point;
  * @author eloi
  *
  */
-public class VoronoiDiagram extends HalfEdge {
+public class VoronoiDiagram extends DCEL {
 
     public List<Point> lastDivideLine;
 
@@ -17,7 +17,7 @@ public class VoronoiDiagram extends HalfEdge {
         super();
     }
 
-    public class VorCell extends HalfEdge.Face {
+    public class VorCell extends DCEL.Face {
         protected Point site;
 
         public String toString() {
