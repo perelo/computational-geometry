@@ -46,16 +46,11 @@ public class DCEL {
 
     public class Edge {
         public boolean isDrawn; // TODO try to remove this field
-        public boolean isNew;   // TODO try to remove or at least put in VorEdge
         protected Vert origin;
         protected Edge twin;
         protected Face face;
         protected Edge next;
         protected Edge prev;
-
-        public Edge() {
-            isNew = false;
-        }
 
         public String toString() {
             return getSegment().toString();

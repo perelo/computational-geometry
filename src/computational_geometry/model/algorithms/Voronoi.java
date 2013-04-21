@@ -270,7 +270,7 @@ public class Voronoi {
             // find intersection between the dividing line and the right cell bounds
             do {
                 Segment s = new Segment(eCr.getOrigin().getPoint(), eCr.getTwin().getOrigin().getPoint());
-                if (!eCr.isNew && (interCr = Lines.findIntersection(l, s)) != null) {
+                if ((interCr = Lines.findIntersection(l, s)) != null) {
                     if (interCr.y <= rayUpperBound) {
                         interCr = null;
                     } else {
@@ -282,7 +282,7 @@ public class Voronoi {
             // find intersection between the dividing line and the right cell bounds
             do {
                 Segment s = new Segment(eCl.getOrigin().getPoint(), eCl.getTwin().getOrigin().getPoint());
-                if (!eCl.isNew && (interCl = Lines.findIntersection(l, s)) != null) {
+                if ((interCl = Lines.findIntersection(l, s)) != null) {
                     if (interCl.y <= rayUpperBound) {
                         interCl = null;
                     } else {
