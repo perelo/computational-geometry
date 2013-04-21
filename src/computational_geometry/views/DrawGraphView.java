@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -12,6 +13,7 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -37,6 +39,8 @@ public class DrawGraphView extends AbstractPanelView implements Listener {
     JRadioButton drawPointPos;
     private JRadioButton stepByStep;
     private JButton nextStep;
+    private JLabel lblX;
+    private JLabel lblY;
 
     public DrawGraphView(Model model, Controller controller) {
         super(model, controller);
@@ -98,6 +102,15 @@ public class DrawGraphView extends AbstractPanelView implements Listener {
         });
         nextStep.setVisible(false);
 
+        JPanel panelCoord = new JPanel(new GridLayout(2, 2));
+        lblX = new JLabel();
+        lblY = new JLabel();
+        panelCoord.add(new JLabel("x = "));
+        panelCoord.add(lblX);
+        panelCoord.add(new JLabel("y = "));
+        panelCoord.add(lblY);
+
+        panelActions.add(panelCoord);
         panelActions.add(effacer);
         panelActions.add(rand);
         panelActions.add(textNombrePoint);
@@ -179,6 +192,14 @@ public class DrawGraphView extends AbstractPanelView implements Listener {
         nextStep.setVisible((trace != null) ? !trace.isDone()
                 && stepByStep.isSelected() : false);
         canvas.repaint();
+    }
+
+    public void setLblX(int x) {
+        lblX.setText(x+"");
+    }
+
+    public void setLblY(int y) {
+        lblY.setText(y+"");
     }
 
 }
@@ -297,6 +318,8 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements
      */
     @Override
     public void mouseMoved(MouseEvent evt) {
+        attachedPanel.setLblX(evt.getX());
+        attachedPanel.setLblY(evt.getY());
         attachedPanel.controller.notifyHoverChanged(evt.getX(), evt.getY());
     }
 
