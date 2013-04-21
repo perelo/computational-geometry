@@ -259,29 +259,14 @@ public class Voronoi {
             return null;
         }
 
-        List<Point> divPoints = new ArrayList<Point>();
-
         // the ray will be l bounded at y by rayUpperBound
-        Point lastDivPoint = l.findUpperPoint(bound);
-        int rayUpperBound = Integer.MIN_VALUE;//Double.NEGATIVE_INFINITY;
-        Edge lastDivEdge = vor1.new Edge(); // downward
-        Edge twinLastDivEdge = vor1.new Edge();
+        int rayUpperBound = Integer.MIN_VALUE;
 
-        Vert v1 = vor1.new Vert(lastDivPoint, lastDivEdge);
-        Vert v2 = vor1.new Vert(l.findLowerPoint(bound), twinLastDivEdge);
-
-        lastDivEdge.fill(v1, twinLastDivEdge, cr, lastDivEdge, lastDivEdge);
-        twinLastDivEdge.fill(v2, lastDivEdge, cl, twinLastDivEdge, twinLastDivEdge);
-
-        res.addEdge(lastDivEdge);
-        res.addEdge(twinLastDivEdge);
-
-        Segment curSeg;
+        List<DivStep> divSteps = new ArrayList<DivStep>();
         Point interCr = null, interCl = null;
-        divPoints.add(lastDivPoint);
         Edge eCr = cr.getEdge();
         Edge eCl = cl.getEdge();
-        while (!(curSeg = new Segment(cl.getSite(), cr.getSite())).equals(hullResult.getLowerTangent())) {
+        while (!(new Segment(cl.getSite(), cr.getSite())).equals(hullResult.getLowerTangent())) {
             // find intersection between the dividing line and the right cell bounds
             do {
                 Segment s = new Segment(eCr.getOrigin().getPoint(), eCr.getTwin().getOrigin().getPoint());
@@ -306,129 +291,240 @@ public class Voronoi {
                 }
                 eCl = eCl.getNext();
             } while (!eCl.equals(cl.getEdge()));
+            DivStep step = new DivStep();
             if (interCr == null && interCl == null) {
                 System.err.println("OMG : ray didn't find anything");
                 break;
             } else if (interCl == null || (interCr != null && interCl.y > interCr.y+2)) {
+                cr.setEdge(eCr);
                 cr = (VorCell) eCr.getTwin().getFace();
                 l = Lines.findBisector(cl.getSite(), cr.getSite());
 
-                Edge newEdge = vor1.new Edge();
-                Edge twinNewEdge = vor1.new Edge();
-                newEdge.isNew = true;
-                twinNewEdge.isNew = true;
+                step.eCl = null;
+                step.eCr = eCr;
+                step.inter = interCr;
 
-                Vert newVert = vor1.new Vert(interCr, newEdge);
-                Vert newEndDivEdge = vor1.new Vert(l.findLowerPoint(bound), twinNewEdge);
-                newEndDivEdge.getPoint().setInfinite(false);
-
-                newEdge.fill(newVert, twinNewEdge, cr, eCr.getTwin().getNext(), eCr.getTwin());
-                twinNewEdge.fill(newEndDivEdge, newEdge, cl, lastDivEdge.getTwin(), eCr.getTwin().getNext());
-                lastDivEdge.setNext(eCr);
-                lastDivEdge.getTwin().setOrigin(newVert);
-                eCr.setOrigin(newVert);
-                eCr.getTwin().setNext(newEdge);
-                if (eCr.getNext().equals(eCr.getNext())) {
-                    eCr.setNext(lastDivEdge);
-                }
-
-                res.addEdge(newEdge);
-                res.addEdge(twinNewEdge);
-
-                eCr = newEdge.getNext();
-                lastDivEdge = newEdge;
-                lastDivPoint = interCr;
+                eCr = eCr.getTwin();
             } else if (interCr == null || (interCl != null && interCl.y+2 < interCr.y)) {
+                cl.setEdge(eCl);
                 cl = (VorCell) eCl.getTwin().getFace();
                 l = Lines.findBisector(cl.getSite(), cr.getSite());
-                Edge newEdge = vor1.new Edge();
-                Edge twinNewEdge = vor1.new Edge();
-                newEdge.isNew = true;
-                twinNewEdge.isNew = true;
 
-                Vert newVert = vor1.new Vert(interCl, newEdge);
-                Vert newEndDivEdge = vor1.new Vert(l.findLowerPoint(bound), twinNewEdge);
-                newEndDivEdge.getPoint().setInfinite(false);
-
-                newEdge.fill(newVert, twinNewEdge, cl, lastDivEdge.getNext(), eCl.getTwin().getPrev());
-                twinNewEdge.fill(newEndDivEdge, newEdge, cl, eCl.getTwin(), eCl.getTwin().getNext());
-                lastDivEdge.setNext(newEdge);
-                lastDivEdge.getTwin().setOrigin(newVert);
-                eCl.setNext(lastDivEdge.getTwin());
-                eCl.getTwin().setOrigin(newVert);
-                if (eCl.getTwin().getNext().equals(eCl.getTwin().getNext())) {
-                    eCl.getTwin().setNext(twinNewEdge);
-                }
-
-                res.addEdge(newEdge);
-                res.addEdge(twinNewEdge);
+                step.eCl = eCl;
+                step.eCr = null;
+                step.inter = interCl;
 
                 eCl = eCl.getTwin();
-                lastDivEdge = newEdge;
-                lastDivPoint = interCl;
             } else {    // interCl = interCr
+                cl.setEdge(eCl);
+                cr.setEdge(eCr);
                 cl = (VorCell) eCl.getTwin().getFace();
                 cr = (VorCell) eCr.getTwin().getFace();
                 l = Lines.findBisector(cl.getSite(), cr.getSite());
-                Edge newEdge = vor1.new Edge();
-                Edge twinNewEdge = vor1.new Edge();
-                newEdge.isNew = true;
-                twinNewEdge.isNew = true;
 
-                Vert newVert = vor1.new Vert(interCl, newEdge);
-                Vert newEndDivEdge = vor1.new Vert(l.findLowerPoint(bound), twinNewEdge);
-                newEndDivEdge.getPoint().setInfinite(false);
-
-                newEdge.fill(newVert, twinNewEdge, cr, eCr.getTwin().getNext(), eCr.getTwin());
-                twinNewEdge.fill(newEndDivEdge, newEdge, cl, eCl.getTwin(), eCl.getTwin().getNext());
-                lastDivEdge.setNext(eCr);
-                lastDivEdge.getTwin().setOrigin(newVert);
-                eCl.setNext(lastDivEdge.getTwin());
-                eCl.getTwin().setOrigin(newVert);
-                eCr.setOrigin(newVert);
-                eCr.getTwin().setNext(newEdge);
-                if (eCr.getNext().equals(eCr.getNext())) {
-                    eCr.setNext(lastDivEdge);
-                }
-                if (eCl.getTwin().getNext().equals(eCl.getTwin().getNext())) {
-                    eCl.getTwin().setNext(twinNewEdge);
-                }
-
-                res.addEdge(newEdge);
-                res.addEdge(twinNewEdge);
+                step.eCl = eCl;
+                step.eCr = eCr;
+                step.inter = interCl;
 
                 eCl = cl.getEdge();
                 eCr = cr.getEdge();
-                lastDivEdge = newEdge;
-                lastDivPoint = interCl;
             }
-            divPoints.add(lastDivPoint);
-            rayUpperBound = (int) Math.ceil(lastDivPoint.y);//+1;
+            divSteps.add(step);
+            rayUpperBound = (int) Math.ceil(step.inter.y);//+1;
             interCr = interCl = null;
         }
-        l = Lines.findBisector(curSeg.u, curSeg.v);
-        Point endOfDiv = l.findLowerPoint(bound);
-        endOfDiv.setInfinite(false);
-        divPoints.add(endOfDiv);
-        res.lastDivideLine = divPoints;
+
+        clipUnwantedEdges(divSteps, vor1, vor2, hullResult);
 
         itFace = vor1.getFaceIterator();
         while (itFace.hasNext()) {
-            res.addFace(itFace.next());
+            Face f = itFace.next();
+            res.addFace(f);
+            Edge e = f.getEdge();
+            do {
+                res.addEdge(e);
+                e = e.getNext();
+            } while (!e.equals(f.getEdge()));
         }
         itFace = vor2.getFaceIterator();
         while (itFace.hasNext()) {
-            res.addFace(itFace.next());
-        }
-        Iterator<Edge> itEdge = vor1.getEdgeIterator();
-        while (itEdge.hasNext()) {
-            res.addEdge(itEdge.next());
-        }
-        itEdge = vor2.getEdgeIterator();
-        while (itEdge.hasNext()) {
-            res.addEdge(itEdge.next());
+            Face f = itFace.next();
+            res.addFace(f);
+            Edge e = f.getEdge();
+            do {
+                res.addEdge(e);
+                e = e.getNext();
+            } while (!e.equals(f.getEdge()));
         }
         return res;
+    }
+
+    /**
+     * Delete from vor1 the part to the right of the div line,
+     * delete from vor2 the part to the left of the div line
+     * update everything
+     * @param divSteps
+     * @param vor1
+     * @param vor2
+     * @param hullResult
+     */
+    private static void clipUnwantedEdges(List<DivStep> divSteps, VoronoiDiagram vor1,
+                                            VoronoiDiagram vor2, HullResult hullResult) {
+        Point u, v;
+        u = hullResult.getUpperTangent().u;
+        v = hullResult.getUpperTangent().v;
+        Line l = Lines.findBisector(u, v);
+
+        Edge lastDivEdge = vor1.new Edge();
+        Edge eTmp = vor1.new Edge();
+
+        Vert v1 = vor1.new Vert(l.findUpperPoint(bound), lastDivEdge);
+        Vert v2 = vor1.new Vert(l.findLowerPoint(bound), eTmp);
+
+        VorCell cl = findCell(vor1, u);
+        VorCell cr = findCell(vor2, v);
+
+        lastDivEdge.fill(v1, eTmp, cr, null, null);
+        eTmp.fill(v2, lastDivEdge, cl, null, null);
+
+        // find first lastDivEdge's prev edge on cr bound
+        eTmp = cr.getEdge();
+        do {
+            if (!eTmp.getNext().getOrigin().equals(eTmp.getTwin().getOrigin())) {
+                lastDivEdge.setPrev(eTmp);
+                eTmp.setNext(lastDivEdge);
+                break;
+            }
+            eTmp = eTmp.getNext();
+        } while (!eTmp.equals(cr.getEdge()));
+        if (lastDivEdge.getPrev() == null) {
+            System.err.println("Cannot find first div edge's prev.");
+            return;
+        }
+        // find first twinLastDivEdge's next edge on cl bound
+        eTmp = cl.getEdge();
+        do {
+            if (!eTmp.getOrigin().equals(eTmp.getPrev().getTwin().getOrigin())) {
+                lastDivEdge.getTwin().setNext(eTmp);
+                eTmp.setPrev(lastDivEdge.getTwin());
+                break;
+            }
+            eTmp = eTmp.getPrev();
+        } while (!eTmp.equals(cl.getEdge()));
+        if (lastDivEdge.getTwin().getNext() == null) {
+            System.err.println("Cannot find first div edge twin's next.");
+            return;
+        }
+
+        for (DivStep step : divSteps) {
+            Edge newEdge = vor1.new Edge();
+            Edge twinNewEdge = vor1.new Edge();
+
+            Vert newVert = vor1.new Vert(step.inter, newEdge);
+            if (step.eCl != null && step.eCr == null) {
+                newEdge.fill(newVert, twinNewEdge, cr, null, lastDivEdge);
+                twinNewEdge.fill(null, newEdge, cl, step.eCl.getTwin(), null);
+                lastDivEdge.setNext(newEdge);
+                lastDivEdge.getTwin().setOrigin(newVert);
+                lastDivEdge.getTwin().setPrev(step.eCl);
+                step.eCl.setNext(lastDivEdge.getTwin());
+                step.eCl.getTwin().setOrigin(newVert);
+                step.eCl.getTwin().setPrev(twinNewEdge);
+                cl = (VorCell) step.eCl.getTwin().getFace();
+            }
+            else if (step.eCr != null && step.eCl == null) {
+                newEdge.fill(newVert, twinNewEdge, cr, null, step.eCr.getTwin());
+                twinNewEdge.fill(null, newEdge, cl, lastDivEdge.getTwin(), null);
+                lastDivEdge.setNext(step.eCr);
+                lastDivEdge.getTwin().setOrigin(newVert);
+                lastDivEdge.getTwin().setPrev(twinNewEdge);
+                step.eCr.setOrigin(newVert);
+                step.eCr.setPrev(lastDivEdge);
+                step.eCr.getTwin().setNext(newEdge);
+                cr = (VorCell) step.eCr.getTwin().getFace();
+            }
+            else {
+                newEdge.fill(newVert, twinNewEdge, cr, null, step.eCr.getTwin());
+                twinNewEdge.fill(null, newEdge, cl, step.eCl.getTwin(), null);
+                lastDivEdge.setNext(step.eCr);
+                lastDivEdge.getTwin().setOrigin(newVert);
+                lastDivEdge.getTwin().setPrev(step.eCl);
+                step.eCl.setNext(lastDivEdge.getTwin());
+                step.eCl.getTwin().setOrigin(newVert);
+                step.eCl.getTwin().setPrev(twinNewEdge);
+                step.eCr.setOrigin(newVert);
+                step.eCr.setPrev(lastDivEdge);
+                step.eCr.getTwin().setNext(newEdge);
+                cl = (VorCell) step.eCl.getTwin().getFace();
+                cr = (VorCell) step.eCr.getTwin().getFace();
+            }
+
+            lastDivEdge = newEdge;
+        }
+
+        // find last lastDivEdge's next edge on cr bound
+        eTmp = cr.getEdge();
+        do {
+            if (!eTmp.getOrigin().equals(eTmp.getPrev().getTwin().getOrigin())) {
+                lastDivEdge.setNext(eTmp);
+                break;
+            }
+            eTmp = eTmp.getPrev();
+        } while (!eTmp.equals(cr.getEdge()));
+        if (lastDivEdge.getPrev() == null) {
+            System.err.println("Cannot find last div edge's next.");
+            return;
+        }
+        // find last twinLastDivEdge's prev edge on cl bound
+        eTmp = cl.getEdge();
+        do {
+            if (!eTmp.getNext().getOrigin().equals(eTmp.getTwin().getOrigin())) {
+                lastDivEdge.getTwin().setPrev(eTmp);
+                break;
+            }
+            eTmp = eTmp.getNext();
+        } while (!eTmp.equals(cl.getEdge()));
+        if (lastDivEdge.getTwin().getNext() == null) {
+            System.err.println("Cannot find last div edge twin's prev.");
+            return;
+        }
+
+        // find last point (at infinity) of the div line
+        u = hullResult.getLowerTangent().u;
+        v = hullResult.getLowerTangent().v;
+        l = Lines.findBisector(u, v);
+        Vert lastVert = vor1.new Vert(l.findLowerPoint(bound), lastDivEdge.getTwin());
+        lastDivEdge.getTwin().setOrigin(lastVert);
+    }
+
+    /**
+     * Find a cell in the voronoi diagram given a points
+     * representing the site (generator) of the wanted cell
+     * @param vor
+     * @param site
+     * @return
+     */
+    private static VorCell findCell(VoronoiDiagram vor, Point site) {
+        Iterator<Face> it = vor.getFaceIterator();
+        while (it.hasNext()) {
+            VorCell cell = (VorCell)it.next();
+            if (cell.getSite().equals(site)) {
+                return cell;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Embedded class representing a "step" during the process of merging
+     * two voronoi diagrams.
+     * @author Eloi
+     *
+     */
+    static class DivStep {
+        private Point inter;
+        private Edge eCr;
+        private Edge eCl;
     }
 
 }
