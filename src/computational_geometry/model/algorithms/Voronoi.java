@@ -333,7 +333,7 @@ public class Voronoi {
         }
 
         // the ray will be l bounded at y by rayUpperBound
-        int rayUpperBound = Integer.MIN_VALUE;
+        Point rayUpperBound = new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
 
         List<DivStep> divSteps = new ArrayList<DivStep>();
         Point interCr = null, interCl = null;
@@ -344,7 +344,8 @@ public class Voronoi {
             do {
                 Segment s = new Segment(eCr.getOrigin().getPoint(), eCr.getTwin().getOrigin().getPoint());
                 if ((interCr = Lines.findIntersection(l, s)) != null) {
-                    if (interCr.y <= rayUpperBound) {
+//                    if ((Math.round(interCr.y) == Math.round(rayUpperBound.y) && Math.round(interCr.x) != Math.round(rayUpperBound.x)) || Math.round(interCr.y) > Math.round(rayUpperBound.y)) {
+                    if (interCr.y <= rayUpperBound.y) {
                         interCr = null;
                     } else {
                         break;
@@ -356,7 +357,8 @@ public class Voronoi {
             do {
                 Segment s = new Segment(eCl.getOrigin().getPoint(), eCl.getTwin().getOrigin().getPoint());
                 if ((interCl = Lines.findIntersection(l, s)) != null) {
-                    if (interCl.y <= rayUpperBound) {
+//                    if ((Math.round(interCl.y) == Math.round(rayUpperBound.y) && Math.round(interCl.x) != Math.round(rayUpperBound.x)) || Math.round(interCl.y) > Math.round(rayUpperBound.y)) {
+                    if (interCl.y <= rayUpperBound.y) {
                         interCl = null;
                     } else {
                         break;
@@ -403,7 +405,8 @@ public class Voronoi {
                 eCr = cr.getEdge();
             }
             divSteps.add(step);
-            rayUpperBound = (int) Math.ceil(step.inter.y);//+1;
+            rayUpperBound.x = (int) Math.ceil(step.inter.x);
+            rayUpperBound.y = (int) Math.ceil(step.inter.y);//+1;
             interCr = interCl = null;
         }
 
