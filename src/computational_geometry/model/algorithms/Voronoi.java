@@ -380,6 +380,7 @@ public class Voronoi {
                 step.inter = interCr;
 
                 eCr = eCr.getTwin();
+                cr.setEdge(eCr);
             } else if (interCr == null || (interCl != null && interCl.y+2 < interCr.y)) {
                 cl.setEdge(eCl);
                 cl = (VorCell) eCl.getTwin().getFace();
@@ -390,6 +391,7 @@ public class Voronoi {
                 step.inter = interCl;
 
                 eCl = eCl.getTwin();
+                cr.setEdge(eCl);
             } else {    // interCl = interCr
                 cl.setEdge(eCl);
                 cr.setEdge(eCr);
@@ -403,6 +405,8 @@ public class Voronoi {
 
                 eCl = cl.getEdge();
                 eCr = cr.getEdge();
+                cl.setEdge(eCl);
+                cr.setEdge(eCr);
             }
             divSteps.add(step);
             rayUpperBound.x = (int) Math.ceil(step.inter.x);
