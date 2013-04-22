@@ -112,7 +112,7 @@ public class Voronoi {
         VorCell c1;
         VorCell c2;
         VorCell c3;
-        if (inter == null) {
+        if (inter == null || !bound.contains(inter.x, inter.y)) {
             // two bisectors,
             // assuming that point is sorted, it's bisector(p1, p2) and bisector(p2, p3)
             Edge e11 = vor.new Edge();
@@ -120,18 +120,91 @@ public class Voronoi {
             Edge e21 = vor.new Edge();
             Edge e22 = vor.new Edge();
 
-            c1 = vor.new VorCell(p1, e11);
-            c2 = vor.new VorCell(p2, e12);
-            c3 = vor.new VorCell(p3, e22);
-
-            Vert v1 = vor.new Vert(b1.findLowerPoint(bound), e11);
-            Vert v2 = vor.new Vert(b1.findUpperPoint(bound), e12);
-            Vert v3 = vor.new Vert(b3.findLowerPoint(bound), e21);
-            Vert v4 = vor.new Vert(b3.findUpperPoint(bound), e22);
+            Line bisector1, bisector2;
+            Point q1, q2, q3, q4;
+            boolean b = false;
+            if (inter == null ||
+               (inter.x > bound.x && inter.x < (bound.x + bound.width))) {
+                c1 = vor.new VorCell(p1, e11);
+                c2 = vor.new VorCell(p2, e12);
+                c3 = vor.new VorCell(p3, e22);
+                // here, qi are infinite
+                q1 = b1.findLowerPoint(bound);
+                q2 = b1.findUpperPoint(bound);
+                q3 = b3.findLowerPoint(bound);
+                q4 = b3.findUpperPoint(bound);
+            } else {
+               if ((p1.y < p2.y && p2.y < p3.y) ||
+                   (b=(p1.y > p2.y && p2.y > p3.y))) {      // bisector(p1, p2) and bisector(p2, p3)
+                   if (b) {
+                       bisector1 = b3;
+                       bisector2 = b1;
+                       c1 = vor.new VorCell(p3, e11);
+                       c3 = vor.new VorCell(p1, e22);
+                   } else {
+                       bisector1 = b1;
+                       bisector2 = b3;
+                       c1 = vor.new VorCell(p1, e11);
+                       c3 = vor.new VorCell(p3, e22);
+                   }
+                   c2 = vor.new VorCell(p2, e12);
+               } else if ((b=(p1.y < p2.y && p1.y > p3.y)) ||
+                          (p1.y > p2.y && p1.y < p3.y)) {   // bisector(p1, p2) and bisector(p1, p3)
+                    if (b) {
+                        bisector1 = b2;
+                        bisector2 = b1;
+                        c1 = vor.new VorCell(p3, e11);
+                        c3 = vor.new VorCell(p2, e22);
+                    } else {
+                        bisector1 = b1;
+                        bisector2 = b2;
+                        c1 = vor.new VorCell(p2, e11);
+                        c3 = vor.new VorCell(p3, e22);
+                    }
+                    c2 = vor.new VorCell(p1, e12);
+                } else if ((b=(p3.y < p2.y && p3.y > p1.y)) ||
+                           (p3.y > p2.y && p3.y < p1.y)) {  // bisector(p1, p3) and bisector(p2, p3)
+                    if (b) {
+                        bisector1 = b2;
+                        bisector2 = b3;
+                        c1 = vor.new VorCell(p1, e11);
+                        c3 = vor.new VorCell(p2, e22);
+                    } else {
+                        bisector1 = b3;
+                        bisector2 = b2;
+                        c1 = vor.new VorCell(p2, e11);
+                        c3 = vor.new VorCell(p1, e22);
+                    }
+                    c2 = vor.new VorCell(p3, e12);
+                } else {
+                    System.err.println("Missing case in construction of diagram of 3 points.");
+                    return null;
+                }
+               if (inter.x < bound.getX()) {
+                   q1 = q3 = inter;
+                   q2 = new Point(bound.getWidth() + bound.getX(), bisector1.findY(bound.getWidth() + bound.getX()));
+                   q4 = new Point(bound.getWidth() + bound.getX(), bisector2.findY(bound.getWidth() + bound.getX()));
+                   q2.setInfinite(true);
+                   q4.setInfinite(true);
+               } else if (inter.x > bound.getX() + bound.getWidth()) {
+                   q2 = q4 = inter;
+                   q1 = new Point(bound.getX(), bisector1.findY(bound.getX()));
+                   q3 = new Point(bound.getX(), bisector2.findY(bound.getX()));
+                   q1.setInfinite(true);
+                   q4.setInfinite(true);
+               } else {
+                   System.err.println("inter is out of bound but in ?? WTF");
+                   return null;
+               }
+            }
+            Vert v1 = vor.new Vert(q1, e11);
+            Vert v2 = vor.new Vert(q2, e12);
+            Vert v3 = vor.new Vert(q3, e21);
+            Vert v4 = vor.new Vert(q4, e22);
 
             e11.fill(v1, e12, c1, e11, e11);
-            e12.fill(v2, e11, c2, e12, e12);
-            e21.fill(v3, e22, c2, e21, e21);
+            e12.fill(v2, e11, c2, e21, e21);
+            e21.fill(v3, e22, c2, e12, e12);
             e22.fill(v4, e21, c3, e22, e22);
 
             vor.addEdge(e11);
