@@ -93,6 +93,9 @@ public class CircularList<T extends Comparable<T>> implements List<T>,
         if (first.equals(elem)) {
             first = elem.getNext();
         }
+        if (size == 0) {
+            first = null;
+        }
         return elem.remove().getValue();
     }
 
