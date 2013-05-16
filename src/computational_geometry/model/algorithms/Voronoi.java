@@ -335,7 +335,7 @@ public class Voronoi {
         // the ray will be l bounded at y by rayUpperBound
         Point rayUpperBound = new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
 
-        List<DivStep> divSteps = new ArrayList<DivStep>();
+        List<ZipStep> zipSteps = new ArrayList<ZipStep>();
         Point interCr = null, interCl = null;
         Edge eCr = cr.getEdge();
         Edge eCl = cl.getEdge();
@@ -353,7 +353,7 @@ public class Voronoi {
                 }
                 eCr = eCr.getNext();
             } while (!eCr.equals(cr.getEdge()));
-            // find intersection between the dividing line and the right cell bounds
+            // find intersection between the dividing line and the left cell bounds
             do {
                 Segment s = new Segment(eCl.getOrigin().getPoint(), eCl.getTwin().getOrigin().getPoint());
                 if ((interCl = Lines.findIntersection(l, s)) != null) {
@@ -366,7 +366,7 @@ public class Voronoi {
                 }
                 eCl = eCl.getNext();
             } while (!eCl.equals(cl.getEdge()));
-            DivStep step = new DivStep();
+            ZipStep step = new ZipStep();
             if (interCr == null && interCl == null) {
                 System.err.println("OMG : ray didn't find anything");
                 break;
@@ -408,13 +408,13 @@ public class Voronoi {
                 cl.setEdge(eCl);
                 cr.setEdge(eCr);
             }
-            divSteps.add(step);
+            zipSteps.add(step);
             rayUpperBound.x = (int) Math.ceil(step.inter.x);
             rayUpperBound.y = (int) Math.ceil(step.inter.y);//+1;
             interCr = interCl = null;
         }
 
-        clipUnwantedEdges(divSteps, vor1, vor2, hullResult);
+        clipUnwantedEdges(zipSteps, vor1, vor2, hullResult);
 
         itFace = vor1.getFaceIterator();
         while (itFace.hasNext()) {
@@ -440,141 +440,142 @@ public class Voronoi {
     }
 
     /**
-     * Delete from vor1 the part to the right of the div line,
-     * delete from vor2 the part to the left of the div line
-     * update everything
-     * @param divSteps
+     * Pass through the zip line to :
+     *  - delete from vor1 the part to the right of the zip line,
+     *  - delete from vor2 the part to the left of the zip line
+     *  - update everything
+     * @param zipSteps
      * @param vor1
      * @param vor2
      * @param hullResult
      */
-    private static void clipUnwantedEdges(List<DivStep> divSteps, VoronoiDiagram vor1,
+    private static void clipUnwantedEdges(List<ZipStep> zipSteps, VoronoiDiagram vor1,
                                             VoronoiDiagram vor2, HullResult hullResult) {
         Point u, v;
         u = hullResult.getUpperTangent().u;
         v = hullResult.getUpperTangent().v;
         Line l = Lines.findBisector(u, v);
 
-        Edge lastDivEdge = vor1.new Edge();
+        Edge lastZipEdge = vor1.new Edge();
         Edge eTmp = vor1.new Edge();
 
-        Vert v1 = vor1.new Vert(l.findUpperPoint(bound), lastDivEdge);
+        Vert v1 = vor1.new Vert(l.findUpperPoint(bound), lastZipEdge);
         Vert v2 = vor1.new Vert(l.findLowerPoint(bound), eTmp);
 
         VorCell cl = findCell(vor1, u);
         VorCell cr = findCell(vor2, v);
 
-        lastDivEdge.fill(v1, eTmp, cr, null, null);
-        eTmp.fill(v2, lastDivEdge, cl, null, null);
+        lastZipEdge.fill(v1, eTmp, cr, null, null);
+        eTmp.fill(v2, lastZipEdge, cl, null, null);
 
-        // find first lastDivEdge's prev edge on cr bound
+        // find first lastZipEdge's prev edge on cr bound
         eTmp = cr.getEdge();
         do {
             if (!eTmp.getNext().getOrigin().equals(eTmp.getTwin().getOrigin())) {
-                lastDivEdge.setPrev(eTmp);
-                eTmp.setNext(lastDivEdge);
+                lastZipEdge.setPrev(eTmp);
+                eTmp.setNext(lastZipEdge);
                 break;
             }
             eTmp = eTmp.getNext();
         } while (!eTmp.equals(cr.getEdge()));
-        if (lastDivEdge.getPrev() == null) {
-            System.err.println("Cannot find first div edge's prev.");
+        if (lastZipEdge.getPrev() == null) {
+            System.err.println("Cannot find first zip edge's prev.");
             return;
         }
-        // find first twinLastDivEdge's next edge on cl bound
+        // find first twinLastZipEdge's next edge on cl bound
         eTmp = cl.getEdge();
         do {
             if (!eTmp.getOrigin().equals(eTmp.getPrev().getTwin().getOrigin())) {
-                lastDivEdge.getTwin().setNext(eTmp);
-                eTmp.setPrev(lastDivEdge.getTwin());
+                lastZipEdge.getTwin().setNext(eTmp);
+                eTmp.setPrev(lastZipEdge.getTwin());
                 break;
             }
             eTmp = eTmp.getPrev();
         } while (!eTmp.equals(cl.getEdge()));
-        if (lastDivEdge.getTwin().getNext() == null) {
-            System.err.println("Cannot find first div edge twin's next.");
+        if (lastZipEdge.getTwin().getNext() == null) {
+            System.err.println("Cannot find first zip edge twin's next.");
             return;
         }
 
-        for (DivStep step : divSteps) {
+        for (ZipStep step : zipSteps) {
             Edge newEdge = vor1.new Edge();
             Edge twinNewEdge = vor1.new Edge();
 
             Vert newVert = vor1.new Vert(step.inter, newEdge);
             if (step.eCl != null && step.eCr == null) {
-                newEdge.fill(newVert, twinNewEdge, cr, null, lastDivEdge);
+                newEdge.fill(newVert, twinNewEdge, cr, null, lastZipEdge);
                 twinNewEdge.fill(null, newEdge, cl, step.eCl.getTwin(), null);
-                lastDivEdge.setNext(newEdge);
-                lastDivEdge.getTwin().setOrigin(newVert);
-                lastDivEdge.getTwin().setPrev(step.eCl);
-                step.eCl.setNext(lastDivEdge.getTwin());
+                lastZipEdge.setNext(newEdge);
+                lastZipEdge.getTwin().setOrigin(newVert);
+                lastZipEdge.getTwin().setPrev(step.eCl);
+                step.eCl.setNext(lastZipEdge.getTwin());
                 step.eCl.getTwin().setOrigin(newVert);
                 step.eCl.getTwin().setPrev(twinNewEdge);
                 cl = (VorCell) step.eCl.getTwin().getFace();
             }
             else if (step.eCr != null && step.eCl == null) {
                 newEdge.fill(newVert, twinNewEdge, cr, null, step.eCr.getTwin());
-                twinNewEdge.fill(null, newEdge, cl, lastDivEdge.getTwin(), null);
-                lastDivEdge.setNext(step.eCr);
-                lastDivEdge.getTwin().setOrigin(newVert);
-                lastDivEdge.getTwin().setPrev(twinNewEdge);
+                twinNewEdge.fill(null, newEdge, cl, lastZipEdge.getTwin(), null);
+                lastZipEdge.setNext(step.eCr);
+                lastZipEdge.getTwin().setOrigin(newVert);
+                lastZipEdge.getTwin().setPrev(twinNewEdge);
                 step.eCr.setOrigin(newVert);
-                step.eCr.setPrev(lastDivEdge);
+                step.eCr.setPrev(lastZipEdge);
                 step.eCr.getTwin().setNext(newEdge);
                 cr = (VorCell) step.eCr.getTwin().getFace();
             }
             else {
                 newEdge.fill(newVert, twinNewEdge, cr, null, step.eCr.getTwin());
                 twinNewEdge.fill(null, newEdge, cl, step.eCl.getTwin(), null);
-                lastDivEdge.setNext(step.eCr);
-                lastDivEdge.getTwin().setOrigin(newVert);
-                lastDivEdge.getTwin().setPrev(step.eCl);
-                step.eCl.setNext(lastDivEdge.getTwin());
+                lastZipEdge.setNext(step.eCr);
+                lastZipEdge.getTwin().setOrigin(newVert);
+                lastZipEdge.getTwin().setPrev(step.eCl);
+                step.eCl.setNext(lastZipEdge.getTwin());
                 step.eCl.getTwin().setOrigin(newVert);
                 step.eCl.getTwin().setPrev(twinNewEdge);
                 step.eCr.setOrigin(newVert);
-                step.eCr.setPrev(lastDivEdge);
+                step.eCr.setPrev(lastZipEdge);
                 step.eCr.getTwin().setNext(newEdge);
                 cl = (VorCell) step.eCl.getTwin().getFace();
                 cr = (VorCell) step.eCr.getTwin().getFace();
             }
 
-            lastDivEdge = newEdge;
+            lastZipEdge = newEdge;
         }
 
-        // find last lastDivEdge's next edge on cr bound
+        // find last lastZipEdge's next edge on cr bound
         eTmp = cr.getEdge();
         do {
             if (!eTmp.getOrigin().equals(eTmp.getPrev().getTwin().getOrigin())) {
-                lastDivEdge.setNext(eTmp);
+                lastZipEdge.setNext(eTmp);
                 break;
             }
             eTmp = eTmp.getPrev();
         } while (!eTmp.equals(cr.getEdge()));
-        if (lastDivEdge.getPrev() == null) {
-            System.err.println("Cannot find last div edge's next.");
+        if (lastZipEdge.getPrev() == null) {
+            System.err.println("Cannot find last zip edge's next.");
             return;
         }
-        // find last twinLastDivEdge's prev edge on cl bound
+        // find last twinLastZipEdge's prev edge on cl bound
         eTmp = cl.getEdge();
         do {
             if (!eTmp.getNext().getOrigin().equals(eTmp.getTwin().getOrigin())) {
-                lastDivEdge.getTwin().setPrev(eTmp);
+                lastZipEdge.getTwin().setPrev(eTmp);
                 break;
             }
             eTmp = eTmp.getNext();
         } while (!eTmp.equals(cl.getEdge()));
-        if (lastDivEdge.getTwin().getNext() == null) {
-            System.err.println("Cannot find last div edge twin's prev.");
+        if (lastZipEdge.getTwin().getNext() == null) {
+            System.err.println("Cannot find last zip edge twin's prev.");
             return;
         }
 
-        // find last point (at infinity) of the div line
+        // find last point (at infinity) of the zip line
         u = hullResult.getLowerTangent().u;
         v = hullResult.getLowerTangent().v;
         l = Lines.findBisector(u, v);
-        Vert lastVert = vor1.new Vert(l.findLowerPoint(bound), lastDivEdge.getTwin());
-        lastDivEdge.getTwin().setOrigin(lastVert);
+        Vert lastVert = vor1.new Vert(l.findLowerPoint(bound), lastZipEdge.getTwin());
+        lastZipEdge.getTwin().setOrigin(lastVert);
     }
 
     /**
@@ -601,7 +602,7 @@ public class Voronoi {
      * @author Eloi
      *
      */
-    static class DivStep {
+    static class ZipStep {
         private Point inter;
         private Edge eCr;
         private Edge eCl;
