@@ -26,6 +26,7 @@ public class DCEL {
         protected Point p;
         protected Edge edge;
 
+        @Override
         public String toString() {
             return "vert.p=" + p;
         }
@@ -52,8 +53,15 @@ public class DCEL {
         protected Edge next;
         protected Edge prev;
 
+        @Override
         public String toString() {
-            return getSegment().toString();
+            StringBuilder sb = new StringBuilder("edge_seg=");
+            if (getSegment() == null) {
+                sb.append("null");
+            } else {
+                sb.append(getSegment().toString());
+            }
+            return sb.toString();
         }
 
         public void fill(Vert origin, Edge twin, Face face, Edge next, Edge prev) {
@@ -65,7 +73,11 @@ public class DCEL {
         }
 
         public Segment getSegment() {
-            return new Segment(origin.p, twin.origin.p);
+            if (origin == null || twin == null || twin.origin == null) {
+                return null;
+            } else {
+                return new Segment(origin.p, twin.origin.p);
+            }
         }
 
         public Vert getOrigin() {
