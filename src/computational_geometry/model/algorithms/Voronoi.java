@@ -337,9 +337,9 @@ public class Voronoi {
 
         List<ZipStep> zipSteps = new ArrayList<ZipStep>();
         Point interCr = null, interCl = null;
-        Edge eCr = cr.getEdge();
-        Edge eCl = cl.getEdge();
         while (!(new Segment(cl.getSite(), cr.getSite())).equals(hullResult.getLowerTangent())) {
+            Edge eCr = cr.getEdge();
+            Edge eCl = cl.getEdge();
             // find intersection between the dividing line and the right cell bounds
             do {
                 Segment s = new Segment(eCr.getOrigin().getPoint(), eCr.getTwin().getOrigin().getPoint());
