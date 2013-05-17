@@ -547,6 +547,7 @@ public class Voronoi {
         eTmp = cr.getEdge();
         do {
             if (!eTmp.getOrigin().equals(eTmp.getPrev().getTwin().getOrigin())) {
+                eTmp.setPrev(lastZipEdge);
                 lastZipEdge.setNext(eTmp);
                 break;
             }
@@ -560,6 +561,7 @@ public class Voronoi {
         eTmp = cl.getEdge();
         do {
             if (!eTmp.getNext().getOrigin().equals(eTmp.getTwin().getOrigin())) {
+                eTmp.setNext(lastZipEdge.getTwin());
                 lastZipEdge.getTwin().setPrev(eTmp);
                 break;
             }
