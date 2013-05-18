@@ -52,16 +52,13 @@ public class Voronoi {
      */
     private static VoronoiTrace Vor(List<Point> points) throws Exception {
         VoronoiTrace trace = new VoronoiTrace();
-        VoronoiDiagram vor;
         if (points.size() == 2) {
-            vor = handle2PointsVor(points);
+            trace.vor = handle2PointsVor(points);
         } else if (points.size() == 3) {
-            vor = handle3PointsVor(points);
+            trace.vor = handle3PointsVor(points);
         } else {
-            vor = handleNPointsVor(points);
+            trace = handleNPointsVor(points);
         }
-
-        trace.vor = vor;
         return trace;
     }
 
@@ -295,7 +292,7 @@ public class Voronoi {
         return vor;
     }
 
-    private static VoronoiDiagram handleNPointsVor(List<Point> points) throws Exception {
+    private static VoronoiTrace handleNPointsVor(List<Point> points) throws Exception {
         int splitIndex = points.size()/2;
         List<Point> L1 = points.subList(0, splitIndex);
         List<Point> L2 = points.subList(splitIndex, points.size());
@@ -306,14 +303,28 @@ public class Voronoi {
         return mergeVor(vor1, vor2, ConvexHull.ConvexHullDivideAndConquer(points));
     }
 
-    private static VoronoiDiagram mergeVor(VoronoiDiagram vor1,
-                                           VoronoiDiagram vor2,
-                                           HullResult hullResult) throws Exception {
-        VoronoiDiagram res = new VoronoiDiagram();
+    private static VoronoiTrace mergeVor(VoronoiDiagram vor1,
+                                         VoronoiDiagram vor2,
+                                         HullResult hullResult) throws Exception {
+        VoronoiTrace trace = new VoronoiTrace();
+        VoronoiDiagram vorRes = new VoronoiDiagram();
+        trace.hull = hullResult;
+        trace.zipLine = new ArrayList<Point>();
+        trace.vorLSegs = new ArrayList<Segment>();
+        trace.vorRSegs = new ArrayList<Segment>();
+        for (Iterator<Edge> it = vor1.getEdgeIterator(); it.hasNext(); ) {
+            Edge e = it.next();
+            trace.vorLSegs.add(new Segment(e.getOrigin().getPoint(), e.getTwin().getOrigin().getPoint()));
+        }
+        for (Iterator<Edge> it = vor2.getEdgeIterator(); it.hasNext(); ) {
+            Edge e = it.next();
+            trace.vorRSegs.add(new Segment(e.getOrigin().getPoint(), e.getTwin().getOrigin().getPoint()));
+        }
         Point u, v;
         u = hullResult.getUpperTangent().u;
         v = hullResult.getUpperTangent().v;
         Line l = Lines.findBisector(u, v);
+        trace.zipLine.add(l.findUpperPoint(bound));
 
         VorCell cr = null, cl = null;
         Iterator<Face> itFace = vor1.getFaceIterator();
@@ -415,34 +426,37 @@ public class Voronoi {
                 cr.setEdge(eCr);
             }
             zipSteps.add(step);
+            trace.zipLine.add(step.inter);
             rayUpperBound.x = (int) Math.ceil(step.inter.x);
             rayUpperBound.y = (int) Math.ceil(step.inter.y);//+1;
             interCr = interCl = null;
         }
+        trace.zipLine.add(l.findLowerPoint(bound));
 
         clipUnwantedEdges(zipSteps, vor1, vor2, hullResult);
 
         itFace = vor1.getFaceIterator();
         while (itFace.hasNext()) {
             Face f = itFace.next();
-            res.addFace(f);
+            vorRes.addFace(f);
             Edge e = f.getEdge();
             do {
-                res.addEdge(e);
+                vorRes.addEdge(e);
                 e = e.getNext();
             } while (!e.equals(f.getEdge()));
         }
         itFace = vor2.getFaceIterator();
         while (itFace.hasNext()) {
             Face f = itFace.next();
-            res.addFace(f);
+            vorRes.addFace(f);
             Edge e = f.getEdge();
             do {
-                res.addEdge(e);
+                vorRes.addEdge(e);
                 e = e.getNext();
             } while (!e.equals(f.getEdge()));
         }
-        return res;
+        trace.vor = vorRes;
+        return trace;
     }
 
     /**
