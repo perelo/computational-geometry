@@ -54,17 +54,17 @@ public class TriangulationTrace implements AlgoTrace {
     }
 
     @Override
-    public void drawCurrentState(Graphics g) {
+    public void drawCurrentState(Graphics g, boolean colorize) {
         if (isDone()) {
-            drawFullResult(g);
+            drawFullResult(g, colorize);
             return;
         }
         if (!monotonSubdivisionTrace.isDone()) {
-            monotonSubdivisionTrace.drawCurrentState(g);
+            monotonSubdivisionTrace.drawCurrentState(g, colorize);
         } else {
-            monotonSubdivisionTrace.drawFullResult(g);
+            monotonSubdivisionTrace.drawFullResult(g, colorize);
             for (int i = 0; i < curMonotonPolygon; ++i) {
-                monotonPolygonsTriangTrace.get(i).drawFullResult(g);
+                monotonPolygonsTriangTrace.get(i).drawFullResult(g, colorize);
             }
             if (!monotonPolygonsTriangTrace.get(curMonotonPolygon).isDone()) {
                 try {
@@ -77,18 +77,17 @@ public class TriangulationTrace implements AlgoTrace {
                     g2.setColor(c);
                     g2.setStroke(s);
                 } catch (ClassCastException cce) {}
-                monotonPolygonsTriangTrace.get(curMonotonPolygon)
-                        .drawCurrentState(g);
+                monotonPolygonsTriangTrace.get(curMonotonPolygon) .drawCurrentState(g, colorize);
                 return;
             }
         }
     }
 
     @Override
-    public void drawFullResult(Graphics g) {
-        monotonSubdivisionTrace.drawFullResult(g);
+    public void drawFullResult(Graphics g, boolean colorize) {
+        monotonSubdivisionTrace.drawFullResult(g, colorize);
         for (MonotonTriangTrace triangTrace : monotonPolygonsTriangTrace) {
-            triangTrace.drawFullResult(g);
+            triangTrace.drawFullResult(g, colorize);
         }
     }
 

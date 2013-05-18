@@ -33,7 +33,7 @@ public class HullResult implements AlgoTrace {
     private int state;  // index in lastTmpTangents
 
     @Override
-    public void drawFullResult(Graphics g) {
+    public void drawFullResult(Graphics g, boolean colorize) {
         Color c = g.getColor();
         g.setColor(Color.GREEN);
         Drawer drawer = SwingDrawer.getInstance(g);
@@ -63,7 +63,7 @@ public class HullResult implements AlgoTrace {
     }
 
     @Override
-    public void drawCurrentState(Graphics g) {
+    public void drawCurrentState(Graphics g, boolean colorize) {
         if (lastLeftHull == null || lastRightHull == null) {
             return;
         }

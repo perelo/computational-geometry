@@ -5,12 +5,15 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import computational_geometry.model.beans.Point;
 import computational_geometry.model.beans.Segment;
 import computational_geometry.model.data_structures.DCEL.Edge;
+import computational_geometry.model.data_structures.DCEL.Face;
 import computational_geometry.model.data_structures.VoronoiDiagram;
 import computational_geometry.views.SwingDrawer;
 
@@ -37,8 +40,8 @@ public class VoronoiTrace implements AlgoTrace {
     }
 
     @Override
-    public void drawFullResult(Graphics g) {
-        drawVoronoiDiagram(vor, SwingDrawer.getInstance(g));
+    public void drawFullResult(Graphics g, boolean colorize) {
+        drawVoronoiDiagram(vor, g, colorize);
     }
 
     @Override
@@ -57,10 +60,10 @@ public class VoronoiTrace implements AlgoTrace {
     }
 
     @Override
-    public void drawCurrentState(Graphics g) {
+    public void drawCurrentState(Graphics g, boolean colorize) {
         Drawer d = SwingDrawer.getInstance(g);
         if (zipLine == null) {
-            drawVoronoiDiagram(vor, d);
+            drawVoronoiDiagram(vor, g, colorize);
         } else {
             Graphics2D g2 = (Graphics2D) g;
             Stroke s = g2.getStroke();
@@ -77,7 +80,7 @@ public class VoronoiTrace implements AlgoTrace {
             for (int i = 0; i < state-1; ++i) {
                 d.drawSegment(zipLine.get(i), zipLine.get(i+1));
             }
-            g.setColor(new Color((float)0.192, (float)0.192, (float)0.192, (float)0.2));
+            g.setColor(Color.CYAN);
             g2.setStroke(new BasicStroke(2));
             d.drawSegment(hull.getLowerTangent());
             d.drawSegment(hull.getUpperTangent());
@@ -86,13 +89,39 @@ public class VoronoiTrace implements AlgoTrace {
         }
     }
 
-    private void drawVoronoiDiagram(VoronoiDiagram vor, Drawer d) {
-        Iterator<Edge> it = vor.getEdgeIterator();
-        while (it.hasNext()) {
-            Edge e = it.next();
-            if (e.getTwin().isDrawn == false) {
-                d.drawSegment(new Segment(e.getOrigin().getPoint(), e.getTwin().getOrigin().getPoint()));
-                e.isDrawn = true;
+    private void drawVoronoiDiagram(VoronoiDiagram vor, Graphics g, boolean colorize) {
+        if (colorize) { // draw by faces
+            Random r = new Random();
+            for (Iterator<Face> it = vor.getFaceIterator(); it.hasNext(); ) {
+                Face f = it.next();
+                Edge e = f.getEdge();
+                List<Point> points = new ArrayList<Point>();
+                do {
+                    points.add(e.getOrigin().getPoint());
+                    if (!e.getTwin().getOrigin().equals(e.getNext().getOrigin())) {
+                        points.add(e.getTwin().getOrigin().getPoint());
+                    }
+                    e = e.getNext();
+                } while (!e.equals(f.getEdge()));
+                int[] xPoints = new int[points.size()];
+                int[] yPoints = new int[points.size()];
+                for (int i = 0; i < points.size(); ++i) {
+                    Point p = points.get(i);
+                    xPoints[i] = (int) p.x;
+                    yPoints[i] = (int) p.y;
+                }
+                g.setColor(new Color(r.nextFloat(), r.nextFloat(), r.nextFloat(), (float)0.5));
+                g.fillPolygon(xPoints, yPoints, points.size());
+            }
+        } else {    // draw by edges
+            Iterator<Edge> it = vor.getEdgeIterator();
+            Drawer d = SwingDrawer.getInstance(g);
+            while (it.hasNext()) {
+                Edge e = it.next();
+                if (e.getTwin().isDrawn == false) {
+                    d.drawSegment(new Segment(e.getOrigin().getPoint(), e.getTwin().getOrigin().getPoint()));
+                    e.isDrawn = true;
+                }
             }
         }
     }

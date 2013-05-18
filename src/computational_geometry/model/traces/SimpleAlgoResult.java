@@ -23,6 +23,6 @@ public abstract class SimpleAlgoResult implements AlgoTrace {
     }
 
     @Override
-    public void drawCurrentState(Graphics g) {}
+    public void drawCurrentState(Graphics g, boolean colorize) {}
 
 }

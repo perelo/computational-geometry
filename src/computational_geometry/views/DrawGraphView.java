@@ -40,6 +40,7 @@ public class DrawGraphView extends AbstractPanelView implements Listener {
     private JButton nextStep;
     private JLabel lblX;
     private JLabel lblY;
+    private JRadioButton colorize;
 
     public DrawGraphView(Model model, Controller controller) {
         super(model, controller);
@@ -109,6 +110,15 @@ public class DrawGraphView extends AbstractPanelView implements Listener {
         panelCoord.add(new JLabel("y = "));
         panelCoord.add(lblY);
 
+        colorize = new JRadioButton("fancy display");
+        colorize.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                canvas.repaint();
+            }
+        });
+
+        panelActions.add(colorize);
         panelActions.add(panelCoord);
         panelActions.add(effacer);
         panelActions.add(rand);
@@ -201,6 +211,10 @@ public class DrawGraphView extends AbstractPanelView implements Listener {
         lblY.setText(y+"");
     }
 
+    public boolean colorize() {
+        return this.colorize.isSelected();
+    }
+
 }
 
 class CanvasSaisirPointsAfficherSegments extends JPanel implements
@@ -233,9 +247,9 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements
         AlgoTrace trace = (algo != null) ? algo.getTrace() : null;
         if (trace != null) {
             if (attachedPanel.model.doSteps() && !trace.isDone()) {
-                trace.drawCurrentState(g);
+                trace.drawCurrentState(g, attachedPanel.colorize());
             } else {
-                trace.drawFullResult(g);
+                trace.drawFullResult(g, attachedPanel.colorize());
             }
         }
     }

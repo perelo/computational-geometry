@@ -56,7 +56,7 @@ public class MonotonTriangTrace implements AlgoTrace {
     }
 
     @Override
-    public void drawCurrentState(Graphics g) {
+    public void drawCurrentState(Graphics g, boolean colorize) {
         if (g == null) {
             System.err.println("Graphics is null");
             return;
@@ -93,7 +93,7 @@ public class MonotonTriangTrace implements AlgoTrace {
     }
 
     @Override
-    public void drawFullResult(Graphics g) {
+    public void drawFullResult(Graphics g, boolean colorize) {
         if (g == null) {
             System.err.println("Graphics is null");
             return;

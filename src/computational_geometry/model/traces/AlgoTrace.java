@@ -17,8 +17,8 @@ public interface AlgoTrace {
 
     boolean isDone();
 
-    public void drawCurrentState(Graphics g);
+    public void drawCurrentState(Graphics g, boolean colorize);
 
-    public void drawFullResult(Graphics g);
+    public void drawFullResult(Graphics g, boolean colorize);
 
 }
