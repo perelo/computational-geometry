@@ -528,8 +528,8 @@ public class Voronoi {
                 cr = (VorCell) step.eCr.getTwin().getFace();
             }
             else {
-                newEdge.fill(newVert, twinNewEdge, cr, null, step.eCr.getTwin());
-                twinNewEdge.fill(null, newEdge, cl, step.eCl.getTwin(), null);
+                newEdge.fill(newVert, twinNewEdge, step.eCr.getTwin().getFace(), null, step.eCr.getTwin());
+                twinNewEdge.fill(null, newEdge, step.eCl.getTwin().getFace(), step.eCl.getTwin(), null);
                 lastZipEdge.setNext(step.eCr);
                 lastZipEdge.getTwin().setOrigin(newVert);
                 lastZipEdge.getTwin().setPrev(step.eCl);
