@@ -1,5 +1,6 @@
 package computational_geometry.model.algorithms;
 
+import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +23,9 @@ import computational_geometry.model.traces.VoronoiTrace;
 
 public class Voronoi {
 
-    public static Rectangle bound = new Rectangle();
+    public static final Rectangle bound =
+            new Rectangle(new java.awt.Point(Integer.MIN_VALUE/2, Integer.MIN_VALUE/2),
+                          new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
     /**
      * Compute voronoi diagram of a given list of points

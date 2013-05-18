@@ -21,7 +21,6 @@ import javax.swing.JTextField;
 import computational_geometry.controller.Controller;
 import computational_geometry.model.Listener;
 import computational_geometry.model.Model;
-import computational_geometry.model.algorithms.Voronoi;
 import computational_geometry.model.beans.Graph;
 import computational_geometry.model.beans.GraphAlgorithm;
 import computational_geometry.model.beans.Point;
@@ -226,9 +225,6 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements
     public void paint(Graphics g) {
         g.clearRect(0, 0, getWidth(), getHeight()); // Erase background
         Graph graph = attachedPanel.model.getGraph();
-
-        // this is terrible
-        Voronoi.bound = g.getClipBounds();
 
         drawSegments(g, graph.getSegments());
         drawPoints(g, graph.getPoints());
