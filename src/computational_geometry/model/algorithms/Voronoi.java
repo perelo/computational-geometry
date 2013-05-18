@@ -428,7 +428,7 @@ public class Voronoi {
             zipSteps.add(step);
             trace.zipLine.add(step.inter);
             rayUpperBound.x = (int) Math.ceil(step.inter.x);
-            rayUpperBound.y = (int) Math.ceil(step.inter.y);//+1;
+            rayUpperBound.y = (int) Math.ceil(step.inter.y) + 0.01;//+1;
             interCr = interCl = null;
         }
         trace.zipLine.add(l.findLowerPoint(bound));
