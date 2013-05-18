@@ -59,7 +59,12 @@ public class Model {
             algorithms.put("Voronoi", new GraphAlgorithm() {
                 @Override
                 public void run(Graph graph) {
-                    trace = Voronoi.ComputeVoronoiDiagram(graph.getPoints());
+                    try {
+                        trace = Voronoi.ComputeVoronoiDiagram(graph.getPoints());
+                    } catch (Exception e) {
+                        trace = null;
+                        e.printStackTrace();
+                    }
                 }
             });
 

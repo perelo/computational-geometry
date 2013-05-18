@@ -32,8 +32,9 @@ public class Voronoi {
      * using the divide and conquer method
      * @param points
      * @return
+     * @throws Exception
      */
-    public static VoronoiTrace ComputeVoronoiDiagram(List<Point> points) {
+    public static VoronoiTrace ComputeVoronoiDiagram(List<Point> points) throws Exception {
         if (points.size() < 2) {
             return null;
         }
@@ -47,8 +48,9 @@ public class Voronoi {
      * assuming the list is sorted
      * @param points : the sorted (by x) list of points
      * @return
+     * @throws Exception
      */
-    private static VoronoiTrace Vor(List<Point> points) {
+    private static VoronoiTrace Vor(List<Point> points) throws Exception {
         VoronoiTrace trace = new VoronoiTrace();
         VoronoiDiagram vor;
         if (points.size() == 2) {
@@ -293,7 +295,7 @@ public class Voronoi {
         return vor;
     }
 
-    private static VoronoiDiagram handleNPointsVor(List<Point> points) {
+    private static VoronoiDiagram handleNPointsVor(List<Point> points) throws Exception {
         int splitIndex = points.size()/2;
         List<Point> L1 = points.subList(0, splitIndex);
         List<Point> L2 = points.subList(splitIndex, points.size());
@@ -306,7 +308,7 @@ public class Voronoi {
 
     private static VoronoiDiagram mergeVor(VoronoiDiagram vor1,
                                            VoronoiDiagram vor2,
-                                           HullResult hullResult) {
+                                           HullResult hullResult) throws Exception {
         VoronoiDiagram res = new VoronoiDiagram();
         Point u, v;
         u = hullResult.getUpperTangent().u;
@@ -371,8 +373,9 @@ public class Voronoi {
             } while (!eCl.equals(cl.getEdge()));
             ZipStep step = new ZipStep();
             if (interCr == null && interCl == null) {
-                System.err.println("OMG : ray didn't find anything");
-                break;
+//                System.err.println("OMG : ray didn't find anything");
+                throw new Exception("Ray didn't find anything");
+//                break;
             } else if (interCl == null || (interCr != null && interCl.y > interCr.y+2)) {
                 cr.setEdge(eCr);
                 cr = (VorCell) eCr.getTwin().getFace();
