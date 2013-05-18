@@ -34,7 +34,6 @@ public class ConvexHull {
         List<LinkNode<Point>> llnp = new ArrayList<LinkNode<Point>>(polygon
                 .getPoints().getNodes());
         if (Utils.getDirection(polygon.getPoints()) > 0) {
-            System.out.println("reverting");
             Collections.reverse(llnp);
         }
         P.addAll(llnp);
