@@ -1,6 +1,7 @@
 package computational_geometry.views;
 
 import java.awt.Graphics;
+import java.util.List;
 
 import computational_geometry.model.beans.Line;
 import computational_geometry.model.beans.Point;
@@ -188,6 +189,22 @@ public class SwingDrawer implements Drawer {
         }
         if (lnp != null) {
             drawSegment(lnp.getValue(), nodePoint.getValue());
+        }
+    }
+
+    @Override
+    public void drawPolygon(List<Point> points, boolean fill) {
+        int[] xPoints = new int[points.size()];
+        int[] yPoints = new int[points.size()];
+        for (int i = 0; i < points.size(); ++i) {
+            Point p = points.get(i);
+            xPoints[i] = (int) p.x;
+            yPoints[i] = (int) p.y;
+        }
+        if (fill) {
+            g.fillPolygon(xPoints, yPoints, points.size());
+        } else {
+            g.drawPolygon(xPoints, yPoints, points.size());
         }
     }
 

@@ -1,5 +1,7 @@
 package computational_geometry.model.traces;
 
+import java.util.List;
+
 import computational_geometry.model.beans.Line;
 import computational_geometry.model.beans.Point;
 import computational_geometry.model.beans.Segment;
@@ -67,5 +69,13 @@ public interface Drawer {
      * @param nodePoint
      */
     public void drawSegmentsBetweenPoints(LinkNode<Point> nodePoint);
+
+    /**
+     * Draw a polygon given a list of points
+     * if fill is set, the polygon will be filled with a color
+     * @param points
+     * @param fill
+     */
+    void drawPolygon(List<Point> points, boolean fill);
 
 }
