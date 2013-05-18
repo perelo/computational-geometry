@@ -63,7 +63,7 @@ public class Model {
                         trace = Voronoi.ComputeVoronoiDiagram(graph.getPoints());
                     } catch (Exception e) {
                         trace = null;
-                        e.printStackTrace();
+                        System.err.println(e.getMessage());
                     }
                 }
             });
