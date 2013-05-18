@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import computational_geometry.model.beans.Point;
+import computational_geometry.model.beans.Polygon;
 import computational_geometry.model.beans.Segment;
 import computational_geometry.views.SwingDrawer;
 
@@ -21,6 +23,8 @@ public class MonotonTriangTrace implements AlgoTrace {
     private int diagIndex;
     private int state;
     private List<Event> events;
+
+    private List<Polygon> monotonPolygons;
 
     public MonotonTriangTrace() {
         this.diagIndex = 0;
@@ -98,10 +102,18 @@ public class MonotonTriangTrace implements AlgoTrace {
             System.err.println("Graphics is null");
             return;
         }
+        Drawer d = SwingDrawer.getInstance(g);
+        if (colorize && monotonPolygons != null) {
+            Random r = new Random();
+            for (Polygon p : monotonPolygons) {
+                g.setColor(new Color(r.nextFloat(), r.nextFloat(), r.nextFloat(), (float)0.5));
+                d.drawPolygon(p.getPoints(), true);
+            }
+        }
         Color c = g.getColor();
         g.setColor(Color.GREEN);
         for (Event event : events) {
-            drawEventDiags(SwingDrawer.getInstance(g), event);
+            drawEventDiags(d, event);
         }
         g.setColor(c);
     }
@@ -147,6 +159,14 @@ public class MonotonTriangTrace implements AlgoTrace {
 
     public List<Event> getEvents() {
         return events;
+    }
+
+    public List<Polygon> getMonotonPolygons() {
+        return monotonPolygons;
+    }
+
+    public void setMonotonPolygons(List<Polygon> monotonPolygons) {
+        this.monotonPolygons = monotonPolygons;
     }
 
 }

@@ -26,6 +26,12 @@ public class Monotonization {
         if (Polygons.isMonotonous(polygon))
             return trace;
 
+        /* reset UV marks */
+        for (Point p : polygon.getPoints()) {
+            p.getDiagonals().clear();
+            p.clearSegments();
+        }
+
         int dir = Utils.getDirection(polygon.getPoints());
         Polygons.markPointsWithType(polygon.getPoints(), dir);
 
@@ -67,6 +73,7 @@ public class Monotonization {
             }
         }
 
+        trace.setMonotonPolygons(Triangulation.retrieveMonotonPolygons(polygon));
         return trace;
     }
 

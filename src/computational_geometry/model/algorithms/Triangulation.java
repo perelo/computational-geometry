@@ -119,9 +119,17 @@ public class Triangulation {
             return triangulateMonotonPolygon(polygon);
         }
 
-        trace.setMonotonSubdivisionTrace(Monotonization
-                .monotonisePolygon(polygon));
+        trace.setMonotonSubdivisionTrace(Monotonization.monotonisePolygon(polygon));
 
+        // triangulate each monotonous piece found
+        for (Polygon p : trace.getMonotonSubdivisionTrace().getMonotonPolygons()) {
+            trace.addMonotonPolygons(p);
+            trace.addMonotonPolygonsTriangTrace(triangulateMonotonPolygon(p));
+        }
+        return trace;
+    }
+
+    public static List<Polygon> retrieveMonotonPolygons(Polygon polygon) {
         List<Polygon> monotonPolygons = new ArrayList<Polygon>();
 
         /* prepare all marks */
@@ -145,13 +153,7 @@ public class Triangulation {
                 monotonPolygons.add(p2);
             }
         }
-
-        // triangulate each monotonous piece found
-        for (Polygon p : monotonPolygons) {
-            trace.addMonotonPolygons(p);
-            trace.addMonotonPolygonsTriangTrace(triangulateMonotonPolygon(p));
-        }
-        return trace;
+        return monotonPolygons;
     }
 
     /**

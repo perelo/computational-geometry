@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import computational_geometry.model.beans.Polygon;
+import computational_geometry.views.SwingDrawer;
 
 /**
  * Trace for the algorithm that compute a triangulation of a simple polygon
@@ -73,7 +74,7 @@ public class TriangulationTrace implements AlgoTrace {
                     Color c = g2.getColor();
                     g.setColor(Color.RED);
                     g2.setStroke(new BasicStroke(2));
-                    drawPolygon(g, monotonPolygons.get(curMonotonPolygon));
+                    SwingDrawer.getInstance(g).drawPolygon(monotonPolygons.get(curMonotonPolygon).getPoints(), false);
                     g2.setColor(c);
                     g2.setStroke(s);
                 } catch (ClassCastException cce) {}
@@ -89,16 +90,6 @@ public class TriangulationTrace implements AlgoTrace {
         for (MonotonTriangTrace triangTrace : monotonPolygonsTriangTrace) {
             triangTrace.drawFullResult(g, colorize);
         }
-    }
-
-    public void drawPolygon(Graphics g, Polygon p) {
-        int[] xPoints = new int[p.getNbPoints()];
-        int[] yPoints = new int[p.getNbPoints()];
-        for (int i = 0; i < p.getNbPoints(); ++i) {
-            xPoints[i] = (int)p.getPoints().get(i).x;
-            yPoints[i] = (int)p.getPoints().get(i).y;
-        }
-        g.drawPolygon(xPoints, yPoints, p.getNbPoints());
     }
 
     public void setMonotonSubdivisionTrace(
