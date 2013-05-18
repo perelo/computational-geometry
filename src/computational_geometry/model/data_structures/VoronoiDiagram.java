@@ -1,7 +1,5 @@
 package computational_geometry.model.data_structures;
 
-import java.util.List;
-
 import computational_geometry.model.beans.Point;
 
 /**
@@ -10,8 +8,6 @@ import computational_geometry.model.beans.Point;
  *
  */
 public class VoronoiDiagram extends DCEL {
-
-    public List<Point> lastDivideLine;
 
     public VoronoiDiagram() {
         super();
