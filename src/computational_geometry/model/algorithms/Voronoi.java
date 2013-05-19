@@ -11,7 +11,7 @@ import computational_geometry.model.beans.Line;
 import computational_geometry.model.beans.Point;
 import computational_geometry.model.beans.Segment;
 import computational_geometry.model.core.Lines;
-import computational_geometry.model.core.PointComparatorX;
+import computational_geometry.model.core.PointLexicalComparator;
 import computational_geometry.model.core.Utils;
 import computational_geometry.model.data_structures.DCEL.Edge;
 import computational_geometry.model.data_structures.DCEL.Face;
@@ -39,7 +39,7 @@ public class Voronoi {
             return null;
         }
         List<Point> sortedPoints = new ArrayList<Point>(points);
-        Collections.sort(sortedPoints, new PointComparatorX());
+        Collections.sort(sortedPoints, new PointLexicalComparator());
         return Vor(sortedPoints);
     }
 
