@@ -243,13 +243,22 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements
         drawSegments(g, graph.getSegments());
         drawPoints(g, graph.getPoints());
 
-        GraphAlgorithm algo = attachedPanel.model.getFirstAlgo();
-        AlgoTrace trace = (algo != null) ? algo.getTrace() : null;
-        if (trace != null) {
-            if (attachedPanel.model.doSteps() && !trace.isDone()) {
-                trace.drawCurrentState(g, attachedPanel.colorize());
-            } else {
-                trace.drawFullResult(g, attachedPanel.colorize());
+        if (attachedPanel.model.doSteps()) {
+            GraphAlgorithm algo = attachedPanel.model.getFirstAlgo();
+            AlgoTrace trace = (algo != null) ? algo.getTrace() : null;
+            if (trace != null) {
+                if (!trace.isDone()) {
+                    trace.drawCurrentState(g, attachedPanel.colorize());
+                } else {
+                    trace.drawFullResult(g, attachedPanel.colorize());
+                }
+            }
+        } else {
+            for (GraphAlgorithm algo : attachedPanel.model.getGraph().getAlgorithms()) {
+                AlgoTrace trace = algo.getTrace();
+                if (trace != null) {
+                    trace.drawFullResult(g, attachedPanel.colorize());
+                }
             }
         }
     }
