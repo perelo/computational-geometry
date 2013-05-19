@@ -9,7 +9,7 @@ import computational_geometry.model.beans.Point;
  * @author eloi
  *
  */
-public class PointComparatorX implements Comparator<Point> {
+public class PointLexicalComparator implements Comparator<Point> {
 
     @Override
     public int compare(Point arg0, Point arg1) {

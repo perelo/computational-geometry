@@ -11,7 +11,7 @@ import computational_geometry.model.beans.Diagonal;
 import computational_geometry.model.beans.Point;
 import computational_geometry.model.beans.Polygon;
 import computational_geometry.model.beans.Segment;
-import computational_geometry.model.core.PointComparatorX;
+import computational_geometry.model.core.PointLexicalComparator;
 import computational_geometry.model.core.Utils;
 import computational_geometry.model.data_structures.CircularList;
 import computational_geometry.model.data_structures.LinkNode;
@@ -152,7 +152,7 @@ public class ConvexHull {
      */
     public static HullResult ConvexHullDivideAndConquer(List<Point> points) {
         List<Point> sortedList = new ArrayList<Point>(points);
-        Collections.sort(sortedList, new PointComparatorX());
+        Collections.sort(sortedList, new PointLexicalComparator());
         return hull(sortedList);
     }
 
