@@ -16,7 +16,9 @@ import computational_geometry.model.beans.Polygon;
 import computational_geometry.model.beans.Scatterplot;
 import computational_geometry.model.core.Polygons;
 import computational_geometry.model.data_structures.CircularList;
+import computational_geometry.model.data_structures.VoronoiDiagram;
 import computational_geometry.model.traces.AlgoTrace;
+import computational_geometry.model.traces.DelaunayTrace;
 
 /**
  * The model of the application
@@ -64,6 +66,19 @@ public class Model {
                     } catch (Exception e) {
                         trace = null;
                         System.err.println(e.getMessage());
+                    }
+                }
+            });
+
+            algorithms.put("Delaunay (vor's dual)", new GraphAlgorithm() {
+                @Override
+                public void run(Graph graph) {
+                    try {
+                        VoronoiDiagram vor = Voronoi.ComputeVoronoiDiagram(graph.getPoints()).vor;
+                        trace = new DelaunayTrace(vor.computeDelaunay());
+                    } catch (Exception e) {
+                        trace = null;
+                        System.err.println("Vor error : " + e.getMessage());
                     }
                 }
             });
