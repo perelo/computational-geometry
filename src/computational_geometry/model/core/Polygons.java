@@ -36,6 +36,30 @@ public class Polygons {
                     .firstElement()));
     }
 
+    /**
+     * Compute the convexness of the polygon,
+     * returns true if all angles have the same orientation.
+     * The polygon points must ordered in the list
+     * @param polygon
+     * @return
+     */
+    public static boolean isConvex(Polygon polygon) {
+        if (polygon.getNbPoints() < 3) {
+            return true;
+        }
+        Point p1, p2, p3;
+        CircularList<Point> points = polygon.getPoints();
+        int firstOrientation = Utils.orientation(points.get(0), points.get(1), points.get(2));
+        for (int i = 1; i < points.size(); ++i) {
+            p1 = points.elementAt(i - 1);
+            p2 = points.elementAt(i);
+            p3 = points.elementAt((i + 1) % points.size());
+            if (Utils.orientation(p1, p2, p3) != firstOrientation)
+                return false;
+        }
+        return true;
+    }
+
     public static boolean isMonotonous(Polygon polygon) {
         CircularList<Point> points = polygon.getPoints();
 
