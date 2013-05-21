@@ -130,7 +130,8 @@ public class Model {
             algorithms.put("Intersection", new GraphAlgorithm() {
                 @Override
                 public void run(Graph graph) {
-                    System.out.println("calculate 2 polygons intersectoin");
+                    trace = Intersection.IntersectConvexPolygons(((TwoPolygonsGraph)graph).getFirstPolygon(),
+                                                                 ((TwoPolygonsGraph)graph).getSecondPolygon());
                 }
             });
 
