@@ -16,6 +16,7 @@ import computational_geometry.model.beans.Polygon;
 import computational_geometry.model.beans.Scatterplot;
 import computational_geometry.model.core.Polygons;
 import computational_geometry.model.data_structures.CircularList;
+import computational_geometry.model.data_structures.TwoPolygonsGraph;
 import computational_geometry.model.data_structures.VoronoiDiagram;
 import computational_geometry.model.traces.AlgoTrace;
 import computational_geometry.model.traces.DelaunayTrace;
@@ -37,8 +38,9 @@ public class Model {
     protected EventListenerList listeners;
 
     public enum GraphType {
-        POLYGON(new Polygon(), createPolygonAlgorithms()), SCATTERPLOT(
-                new Scatterplot(), createScatterplotAlgorithms());
+        POLYGON(new Polygon(), createPolygonAlgorithms()),
+        SCATTERPLOT(new Scatterplot(), createScatterplotAlgorithms()),
+        TWO_POLYGONS(new TwoPolygonsGraph(), create2PolygonsAlgorithms());
 
         private final Graph newGraph;
         private Map<String, GraphAlgorithm> algorithms;
@@ -116,6 +118,37 @@ public class Model {
                 @Override
                 public void run(Graph graph) {
                     trace = ConvexHull.polygonConvexHull((Polygon) graph);
+                }
+            });
+
+            return algorithms;
+        }
+
+        private static Map<String, GraphAlgorithm> create2PolygonsAlgorithms() {
+            Map<String, GraphAlgorithm> algorithms = new HashMap<String, GraphAlgorithm>();
+
+            algorithms.put("Intersection", new GraphAlgorithm() {
+                @Override
+                public void run(Graph graph) {
+                    System.out.println("calculate 2 polygons intersectoin");
+                }
+            });
+
+            /*
+             * the next two are not algorithms,
+             * but we must hack a little bit the architecture
+             * to make this weird graph type works well
+             */
+            algorithms.put("_first", new GraphAlgorithm() {
+                @Override
+                public void run(Graph graph) {
+                    ((TwoPolygonsGraph)graph).setSelected(TwoPolygonsGraph.Selected.FIRST);
+                }
+            });
+            algorithms.put("_second", new GraphAlgorithm() {
+                @Override
+                public void run(Graph graph) {
+                    ((TwoPolygonsGraph)graph).setSelected(TwoPolygonsGraph.Selected.SECOND);
                 }
             });
 
