@@ -1,7 +1,9 @@
 package computational_geometry.views;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.List;
+import java.util.Random;
 
 import computational_geometry.model.beans.Line;
 import computational_geometry.model.beans.Point;
@@ -19,6 +21,7 @@ import computational_geometry.model.traces.Drawer;
 public class SwingDrawer implements Drawer {
 
     private static SwingDrawer instance;
+    private Random r = new Random();
 
     public static SwingDrawer getInstance(Graphics g) {
         if (instance == null) {
@@ -206,6 +209,10 @@ public class SwingDrawer implements Drawer {
         } else {
             g.drawPolygon(xPoints, yPoints, points.size());
         }
+    }
+
+    public Color getRandomColor(float alpha) {
+        return new Color(r.nextFloat(), r.nextFloat(), r.nextFloat(), alpha);
     }
 
 }
