@@ -23,6 +23,9 @@ public class PolygonIntersectionTrace extends SimpleAlgoResult implements AlgoTr
 
     @Override
     public void drawFullResult(Graphics g, boolean colorize) {
+        if (interPolygon.size() < 3) {
+            return;
+        }
         SwingDrawer d = SwingDrawer.getInstance(g);
         Graphics2D g2 = (Graphics2D) g;
         Stroke s = g2.getStroke();

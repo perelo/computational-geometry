@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.swing.event.EventListenerList;
 
 import computational_geometry.model.algorithms.ConvexHull;
+import computational_geometry.model.algorithms.Intersection;
 import computational_geometry.model.algorithms.Monotonization;
 import computational_geometry.model.algorithms.Triangulation;
 import computational_geometry.model.algorithms.Voronoi;
