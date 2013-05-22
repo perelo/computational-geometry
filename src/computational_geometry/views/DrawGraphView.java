@@ -21,11 +21,13 @@ import javax.swing.JTextField;
 import computational_geometry.controller.Controller;
 import computational_geometry.model.Listener;
 import computational_geometry.model.Model;
+import computational_geometry.model.Model.GraphType;
 import computational_geometry.model.beans.Graph;
 import computational_geometry.model.beans.GraphAlgorithm;
 import computational_geometry.model.beans.Point;
 import computational_geometry.model.beans.Segment;
 import computational_geometry.model.data_structures.CircularList;
+import computational_geometry.model.data_structures.TwoPolygonsGraph;
 import computational_geometry.model.traces.AlgoTrace;
 import computational_geometry.model.traces.Drawer;
 
@@ -240,8 +242,16 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements
         g.clearRect(0, 0, getWidth(), getHeight()); // Erase background
         Graph graph = attachedPanel.model.getGraph();
 
-        drawSegments(g, graph.getSegments());
-        drawPoints(g, graph.getPoints());
+        if (attachedPanel.model.getGraphType() == GraphType.TWO_POLYGONS) {
+            TwoPolygonsGraph twoPolygons = (TwoPolygonsGraph) graph;
+            drawPoints(g, twoPolygons.getFirstPolygon().getPoints());
+            drawPoints(g, twoPolygons.getSecondPolygon().getPoints());
+            drawSegments(g, twoPolygons.getFirstPolygon().getSegments());
+            drawSegments(g, twoPolygons.getSecondPolygon().getSegments());
+        } else {
+            drawSegments(g, graph.getSegments());
+            drawPoints(g, graph.getPoints());
+        }
 
         if (attachedPanel.model.doSteps()) {
             GraphAlgorithm algo = attachedPanel.model.getFirstAlgo();

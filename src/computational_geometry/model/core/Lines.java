@@ -61,7 +61,7 @@ public class Lines {
      */
     public static Point findIntersection(Segment s1, Segment s2) {
         Point p = findLine(s1.u, s1.v).findIntersection(findLine(s2.u, s2.v));
-        return (isInRectangle(p, s2) && isInRectangle(p, s2)) ? p : null;
+        return (isInRectangle(p, s2) && isInRectangle(p, s1)) ? p : null;
     }
 
     /**
