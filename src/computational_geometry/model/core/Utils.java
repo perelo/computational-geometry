@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.Vector;
 
 import computational_geometry.model.beans.Point;
+import computational_geometry.model.beans.Segment;
 import computational_geometry.model.data_structures.CircularList;
 
 /**
@@ -104,6 +105,10 @@ public class Utils {
         // p2p3 vector (p3.x - p2.x, p3.y - p3.y)
         // cross product = p2p1.x*p2p3.y - p2p1.y*p2p3.x
         return (p1.x - p2.x) * (p3.y - p2.y) - (p3.x - p2.x) * (p1.y - p2.y);
+    }
+
+    public static double crossProduct(Segment a, Segment b) {
+        return crossProduct(a.u, a.v, new Point(b.v.x - b.u.x + a.u.x, b.v.y - b.u.y + a.u.y));
     }
 
     /**
