@@ -1,4 +1,4 @@
-package computational_geometry.model;
+package computational_geometry.model.traces;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -9,8 +9,6 @@ import java.util.List;
 
 import computational_geometry.model.beans.Point;
 import computational_geometry.model.data_structures.CircularList;
-import computational_geometry.model.traces.AlgoTrace;
-import computational_geometry.model.traces.SimpleAlgoResult;
 import computational_geometry.views.SwingDrawer;
 
 public class PolygonIntersectionTrace extends SimpleAlgoResult implements AlgoTrace {

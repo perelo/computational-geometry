@@ -1,6 +1,5 @@
 package computational_geometry.model.algorithms;
 
-import computational_geometry.model.PolygonIntersectionTrace;
 import computational_geometry.model.beans.Point;
 import computational_geometry.model.beans.Polygon;
 import computational_geometry.model.beans.Segment;
@@ -9,6 +8,7 @@ import computational_geometry.model.core.Polygons;
 import computational_geometry.model.core.Utils;
 import computational_geometry.model.data_structures.LinkNode;
 import computational_geometry.model.traces.AlgoTrace;
+import computational_geometry.model.traces.PolygonIntersectionTrace;
 
 public class Intersection {
 
