@@ -226,7 +226,7 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements
     private DrawGraphView attachedPanel;
 
     private final Color pointColor = Color.GRAY;
-    private final Color segmentColor = Color.BLUE;
+    private Color segmentColor = Color.BLUE;
     private final Color selectedPointColor = Color.RED;
 
     public CanvasSaisirPointsAfficherSegments(DrawGraphView attachedPanel) {
@@ -246,8 +246,12 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements
             TwoPolygonsGraph twoPolygons = (TwoPolygonsGraph) graph;
             drawPoints(g, twoPolygons.getFirstPolygon().getPoints());
             drawPoints(g, twoPolygons.getSecondPolygon().getPoints());
+            Color c = segmentColor;
+            segmentColor = Color.ORANGE;
             drawSegments(g, twoPolygons.getFirstPolygon().getSegments());
+            segmentColor = Color.CYAN;
             drawSegments(g, twoPolygons.getSecondPolygon().getSegments());
+            segmentColor = c;
         } else {
             drawSegments(g, graph.getSegments());
             drawPoints(g, graph.getPoints());
