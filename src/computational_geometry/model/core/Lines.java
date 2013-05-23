@@ -83,8 +83,8 @@ public class Lines {
         }
         return ((s.u.x <= s.v.x && p.x >= s.u.x && p.x <= s.v.x) ||
                 (s.u.x >= s.v.x && p.x <= s.u.x && p.x >= s.v.x))
-            && ((s.u.x <= s.v.x && p.x >= s.u.x && p.x <= s.v.x) ||
-                (s.u.x >= s.v.x && p.x <= s.u.x && p.x >= s.v.x));
+            && ((s.u.y <= s.v.y && p.y >= s.u.y && p.y <= s.v.y) ||
+                (s.u.y >= s.v.y && p.y <= s.u.y && p.y >= s.v.y));
     }
 
 }
