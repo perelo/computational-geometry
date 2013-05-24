@@ -15,7 +15,8 @@ public class Intersection {
     private enum Inside { FIRST, SECOND, UNKNOWN };
 
     public static AlgoTrace IntersectConvexPolygons(Polygon firstPolygon, Polygon secondPolygon) {
-        if (!Polygons.isConvex(firstPolygon) || !Polygons.isConvex(secondPolygon)) {
+        if (firstPolygon.getNbPoints() < 3   || secondPolygon.getNbPoints() < 3 ||
+            !Polygons.isConvex(firstPolygon) || !Polygons.isConvex(secondPolygon)) {
             return null;
         }
 
@@ -79,9 +80,9 @@ public class Intersection {
     }
 
     private static Inside updateFlag(Inside flag, double aInHB, double bInHA) {
-        if (aInHB < 0) {
+        if (aInHB <= 0) {
             return Inside.FIRST;
-        } else if (bInHA < 0) {
+        } else if (bInHA <= 0) {
             return Inside.SECOND;
         } else {
             return flag;
