@@ -35,14 +35,37 @@ public class HullResult implements AlgoTrace {
     @Override
     public void drawFullResult(Graphics g, boolean colorize) {
         Color c = g.getColor();
-        g.setColor(Color.GREEN);
         Drawer drawer = SwingDrawer.getInstance(g);
         if (segments.size() != 0) {
-            for (Segment s : segments) {
-                drawer.drawSegment(s);
+            if (colorize) {
+                g.setColor(new Color((float)0, (float)1, (float)0, (float)0.4));
+                List<Point> points = new ArrayList<Point>();
+                for (Segment s : segments) {
+                    points.add(s.u);
+                }
+                drawer.drawPolygon(points, true);
+            } else {
+                g.setColor(Color.GREEN);
+                for (Segment s : segments) {
+                    drawer.drawSegment(s);
+                }
             }
         } else if (hull != null) {
-            drawer.drawSegmentsBetweenPoints(hull);
+            if (colorize) {
+                List<Point> points = new ArrayList<Point>();
+                LinkNode<Point> lnp;
+                for (lnp = hull; !lnp.getNext().equals(hull) && lnp.getNext() != null; lnp = lnp.getNext()) {
+                    points.add(lnp.getValue());
+                }
+                if (lnp != null) {
+                    points.add(lnp.getValue());
+                }
+                g.setColor(new Color((float)0, (float)1, (float)0, (float)0.4));
+                drawer.drawPolygon(points, true);
+            } else {
+                g.setColor(Color.GREEN);
+                drawer.drawSegmentsBetweenPoints(hull);
+            }
         }
         g.setColor(c);
     }
