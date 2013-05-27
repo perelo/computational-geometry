@@ -41,7 +41,10 @@ public class VoronoiTrace implements AlgoTrace {
 
     @Override
     public void drawFullResult(Graphics g, boolean colorize) {
+        Color c = g.getColor();
+        g.setColor(Color.BLACK);
         drawVoronoiDiagram(vor, g, colorize);
+        g.setColor(c);
     }
 
     @Override

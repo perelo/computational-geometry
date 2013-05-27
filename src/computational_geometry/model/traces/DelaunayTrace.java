@@ -1,5 +1,6 @@
 package computational_geometry.model.traces;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.List;
 
@@ -19,10 +20,13 @@ public class DelaunayTrace extends SimpleAlgoResult {
         if (segments == null) {
             return;
         }
+        Color c = g.getColor();
+        g.setColor(Color.MAGENTA);
         Drawer d = SwingDrawer.getInstance(g);
         for (Segment s : segments) {
             d.drawSegment(s);
         }
+        g.setColor(c);
     }
 
 }
