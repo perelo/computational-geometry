@@ -23,6 +23,12 @@ public class Minkowski {
             return null;
         }
 
+        if (Utils.getDirection( firstPolygon.getPoints()) < 0 ||
+            Utils.getDirection(secondPolygon.getPoints()) < 0) {
+            System.err.println("wrong direction");
+            return null;
+        }
+
         MinkowskiTrace trace = new MinkowskiTrace();
         Polygon sum = new Polygon();
         LinkNode<Point> v, w;
