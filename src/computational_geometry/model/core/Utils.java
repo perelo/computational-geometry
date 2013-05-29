@@ -111,6 +111,10 @@ public class Utils {
         return crossProduct(a.u, a.v, new Point(b.v.x - b.u.x + a.u.x, b.v.y - b.u.y + a.u.y));
     }
 
+    public static int orientation(Point p1, Point p2, Point p3, Point p4) {
+        return orientation(p1, p2, new Point(p4.x - p3.x + p1.x, p4.y - p3.y + p1.y));
+    }
+
     /**
      * Compute the orientation of three given points
      * @param p

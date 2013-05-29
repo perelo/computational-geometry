@@ -149,4 +149,8 @@ public class Point implements Comparable<Point> {
         this.isInfinite = isInfinite;
     }
 
+    public Point sum(Point p) {
+        return new Point(this.x + p.x, this.y + p.y);
+    }
+
 }

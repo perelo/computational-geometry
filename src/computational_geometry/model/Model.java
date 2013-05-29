@@ -7,6 +7,7 @@ import javax.swing.event.EventListenerList;
 
 import computational_geometry.model.algorithms.ConvexHull;
 import computational_geometry.model.algorithms.Intersection;
+import computational_geometry.model.algorithms.Minkowski;
 import computational_geometry.model.algorithms.Monotonization;
 import computational_geometry.model.algorithms.Triangulation;
 import computational_geometry.model.algorithms.Voronoi;
@@ -127,6 +128,14 @@ public class Model {
 
         private static Map<String, GraphAlgorithm> create2PolygonsAlgorithms() {
             Map<String, GraphAlgorithm> algorithms = new HashMap<String, GraphAlgorithm>();
+
+            algorithms.put("Minkowski sum", new GraphAlgorithm() {
+                @Override
+                public void run(Graph graph) {
+                    trace = Minkowski.computeMinkowskiSum(((TwoPolygonsGraph)graph).getFirstPolygon(),
+                                                             ((TwoPolygonsGraph)graph).getSecondPolygon());
+                }
+            });
 
             algorithms.put("Intersection", new GraphAlgorithm() {
                 @Override
