@@ -23,6 +23,7 @@ public class Minkowski {
             return null;
         }
 
+        MinkowskiTrace trace = new MinkowskiTrace();
         Polygon sum = new Polygon();
         LinkNode<Point> v, w;
         int i, j;
@@ -50,6 +51,7 @@ public class Minkowski {
         i = j = 1;
         do {
             sum.addPoint(v.getValue().sum(w.getValue()));
+            trace.addCouple(v.getValue(), w.getValue());
             ori = Utils.orientation(v.getValue(), v.getNext().getValue(), w.getValue(), w.getNext().getValue());
             if (ori < 0) {
                 v = v.getNext();
@@ -65,7 +67,6 @@ public class Minkowski {
         } while (i !=  firstPolygon.getNbPoints()+1 ||
                  j != secondPolygon.getNbPoints()+1);
 
-        MinkowskiTrace trace = new MinkowskiTrace();
         trace.setPolygon(sum);
         return trace;
     }
