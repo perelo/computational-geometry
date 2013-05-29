@@ -103,11 +103,6 @@ public class Triangulation {
         TriangulationTrace trace = new TriangulationTrace();
         if (polygon.getNbPoints() < 3)
             return trace;
-        int dir = Utils.getDirection(polygon.getPoints());
-        if (dir > 0) { // TODO the algo work w/o this
-            System.err.println("wrong direction");
-            return null;
-        }
 
         /* reset UV marks */
         for (Point p : polygon.getPoints()) {
@@ -129,7 +124,7 @@ public class Triangulation {
         return trace;
     }
 
-    public static List<Polygon> retrieveMonotonPolygons(Polygon polygon) {
+    public static List<Polygon> retrieveMonotonPolygons(Polygon polygon, int dir) {
         List<Polygon> monotonPolygons = new ArrayList<Polygon>();
 
         /* prepare all marks */
@@ -144,8 +139,8 @@ public class Triangulation {
         for (Segment s : polygon.getSegments()) {
             Polygon p1 = new Polygon();
             Polygon p2 = new Polygon();
-            calculatePolygon(p1, s, Segment.WayMark.UV);
-            calculatePolygon(p2, s, Segment.WayMark.VU);
+            calculatePolygon(p1, s, Segment.WayMark.UV, dir);
+            calculatePolygon(p2, s, Segment.WayMark.VU, dir);
             if (p1.getNbPoints() > 0) {
                 monotonPolygons.add(p1);
             }
@@ -163,7 +158,7 @@ public class Triangulation {
      * @param mark
      */
     private static void calculatePolygon(Polygon polygon, Segment s,
-            Segment.WayMark mark) {
+            Segment.WayMark mark, int dir) {
 
         Segment nextSeg = null;
         Segment.WayMark nextMark = null;
@@ -172,7 +167,11 @@ public class Triangulation {
             if (s.isFlagUV())
                 return;
             s.setFlagUV(true);
-            nextSeg = s.v.getNextSegInSortedList(s.getPosInVSortedList());
+            if (dir < 0) {
+                nextSeg = s.v.getNextSegInSortedList(s.getPosInVSortedList());
+            } else {
+                nextSeg = s.v.getPrevSegInSortedList(s.getPosInVSortedList());
+            }
             nextMark = (s.v.equals(nextSeg.u) ? WayMark.UV : WayMark.VU);
             polygon.addPoint(s.v);
             break;
@@ -180,12 +179,16 @@ public class Triangulation {
             if (s.isFlagVU())
                 return;
             s.setFlagVU(true);
-            nextSeg = s.u.getNextSegInSortedList(s.getPosInUSortedList());
+            if (dir < 0) {
+                nextSeg = s.u.getNextSegInSortedList(s.getPosInUSortedList());
+            } else {
+                nextSeg = s.u.getPrevSegInSortedList(s.getPosInUSortedList());
+            }
             nextMark = (s.u.equals(nextSeg.u) ? WayMark.UV : WayMark.VU);
             polygon.addPoint(s.u);
             break;
         }
-        calculatePolygon(polygon, nextSeg, nextMark);
+        calculatePolygon(polygon, nextSeg, nextMark, dir);
     }
 
 }

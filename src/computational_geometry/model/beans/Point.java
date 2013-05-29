@@ -141,6 +141,14 @@ public class Point implements Comparable<Point> {
                 (posInSortedList + 1) % getOrderedSegments().size());
     }
 
+    public Segment getPrevSegInSortedList(int posInSortedList) {
+        int i = posInSortedList;
+        if (posInSortedList <= 0) {
+            i += (getOrderedSegments().size() * (Math.abs(posInSortedList) / getOrderedSegments().size() +1));
+        }
+        return getOrderedSegments().get(i-1);
+    }
+
     public boolean isInfinite() {
         return isInfinite;
     }

@@ -73,7 +73,7 @@ public class Monotonization {
             }
         }
 
-        trace.setMonotonPolygons(Triangulation.retrieveMonotonPolygons(polygon));
+        trace.setMonotonPolygons(Triangulation.retrieveMonotonPolygons(polygon, dir));
         return trace;
     }
 
